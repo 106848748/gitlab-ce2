@@ -92,15 +92,12 @@ class Projects::WikisController < Projects::ApplicationController
   end
 
   def preview_markdown
-    text = params[:text]
-
-    ext = Gitlab::ReferenceExtractor.new(@project, current_user)
-    ext.analyze(text, author: current_user)
+    result = PreviewMarkdownService.new(@project, current_user, params).execute
 
     render json: {
-      body: view_context.markdown(text, pipeline: :wiki, project_wiki: @project_wiki, page_slug: params[:id]),
+      body: view_context.markdown(result[:text], pipeline: :wiki, project_wiki: @project_wiki, page_slug: params[:id]),
       references: {
-        users: ext.users.map(&:username)
+        users: result[:users]
       }
     }
   end
