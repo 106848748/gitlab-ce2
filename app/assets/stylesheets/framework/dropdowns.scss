@@ -19,6 +19,31 @@
   .dropdown-menu-nav {
     display: block;
 
+    @include include-keyframes(fade-in) {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @include include-keyframes(slide-in) {
+      0% {
+        margin-top: -10px;
+      }
+
+      100% {
+        margin-top: 0;
+      }
+    }
+
+    animation-duration: 200ms, 400ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear, cubic-bezier(0.23, 1, 0.32, 1);
+    animation-delay: 200ms, 0;
+
     @media (max-width: $screen-xs-max) {
       width: 100%;
       min-width: 240px;
@@ -573,6 +598,7 @@
     color: $gl-text-color-secondary;
   }
 }
+<<<<<<< HEAD
 
 .droplab-item-ignore {
   pointer-events: none;
@@ -617,3 +643,5 @@
     margin-top: -10px;
   }
 }
+=======
+>>>>>>> using mixin to define particular keyframe and animation name
