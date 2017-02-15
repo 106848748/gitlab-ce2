@@ -72,6 +72,11 @@ export default {
       return StatusIconEntityMap[this.stage.status.icon];
     },
   },
+  watch: {
+    'stage.title': function stageTitle() {
+      $(this.$refs.button).tooltip('destroy').tooltip();
+    },
+  },
   template: `
     <div>
       <button
@@ -81,6 +86,7 @@ export default {
         data-placement="top"
         data-toggle="dropdown"
         type="button"
+        ref="button"
         :aria-label="stage.title">
         <span v-html="svgHTML" aria-hidden="true"></span>
         <i class="fa fa-caret-down" aria-hidden="true"></i>

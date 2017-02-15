@@ -19,14 +19,6 @@ module MergeRequestsHelper
     }
   end
 
-  def mr_widget_refresh_url(mr)
-    if mr && mr.target_project
-      merge_widget_refresh_namespace_project_merge_request_url(mr.target_project.namespace, mr.target_project, mr)
-    else
-      ''
-    end
-  end
-
   def mr_css_classes(mr)
     classes = "merge-request"
     classes << " closed" if mr.closed?
@@ -55,22 +47,6 @@ module MergeRequestsHelper
     end
   end
 
-  def issues_sentence(issues)
-    # Sorting based on the `#123` or `group/project#123` reference will sort
-    # local issues first.
-    issues.map do |issue|
-      issue.to_reference(@project)
-    end.sort.to_sentence
-  end
-
-  def mr_closes_issues
-    @mr_closes_issues ||= @merge_request.closes_issues(current_user)
-  end
-
-  def mr_issues_mentioned_but_not_closing
-    @mr_issues_mentioned_but_not_closing ||= @merge_request.issues_mentioned_but_not_closing(current_user)
-  end
-
   def mr_change_branches_path(merge_request)
     new_namespace_project_merge_request_path(
       @project.namespace, @project,
@@ -82,35 +58,6 @@ module MergeRequestsHelper
       },
       change_branches: true
     )
-  end
-
-  def mr_assign_issues_link
-    issues = MergeRequests::AssignIssuesService.new(@project,
-                                                    current_user,
-                                                    merge_request: @merge_request,
-                                                    closes_issues: mr_closes_issues
-                                                   ).assignable_issues
-    path = assign_related_issues_namespace_project_merge_request_path(@project.namespace, @project, @merge_request)
-    if issues.present?
-      pluralize_this_issue = issues.count > 1 ? "these issues" : "this issue"
-      link_to "Assign yourself to #{pluralize_this_issue}", path, method: :post
-    end
-  end
-
-  def source_branch_with_namespace(merge_request)
-    namespace = merge_request.source_project_namespace
-    branch = merge_request.source_branch
-
-    if merge_request.source_branch_exists?
-      namespace = link_to(namespace, project_path(merge_request.source_project))
-      branch = link_to(branch, namespace_project_commits_path(merge_request.source_project.namespace, merge_request.source_project, merge_request.source_branch))
-    end
-
-    if merge_request.for_fork?
-      namespace + ":" + branch
-    else
-      branch
-    end
   end
 
   def format_mr_branch_names(merge_request)

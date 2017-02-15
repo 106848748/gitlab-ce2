@@ -275,7 +275,7 @@ require('./task_list');
 
       if (note.commands_changes) {
         if ('merge' in note.commands_changes) {
-          $.get(mrRefreshWidgetUrl);
+          Notes.checkMergeRequestStatus();
         }
 
         if ('emoji_award' in note.commands_changes) {
@@ -387,6 +387,7 @@ require('./task_list');
       }
 
       gl.utils.localTimeAgo($('.js-timeago'), false);
+      Notes.checkMergeRequestStatus();
       return this.updateNotesCount(1);
     };
 
@@ -711,7 +712,8 @@ require('./task_list');
           }
         };
       })(this));
-      // Decrement the "Discussions" counter only once
+
+      Notes.checkMergeRequestStatus();
       return this.updateNotesCount(-1);
     };
 
@@ -1062,6 +1064,12 @@ require('./task_list');
         .remove();
 
       return $form;
+    };
+
+    Notes.checkMergeRequestStatus = function() {
+      if (gl.utils.getPagePath(1) === 'merge_requests') {
+        gl.mrWidget.checkStatus();
+      }
     };
 
     Notes.animateAppendNote = function(noteHTML, $notesList) {
