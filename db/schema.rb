@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170426181740) do
+ActiveRecord::Schema.define(version: 20170427205316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,14 +113,17 @@ ActiveRecord::Schema.define(version: 20170426181740) do
     t.string "plantuml_url"
     t.boolean "plantuml_enabled"
     t.integer "terminal_max_session_time", default: 0, null: false
-    t.string "default_artifacts_expire_in", default: "0", null: false
     t.integer "unique_ips_limit_per_user"
     t.integer "unique_ips_limit_time_window"
     t.boolean "unique_ips_limit_enabled", default: false, null: false
+<<<<<<< 6ae76738dde8fecb117f7706ae2ef74c1d83cdb7
     t.decimal "polling_interval_multiplier", default: 1.0, null: false
     t.integer "cached_markdown_version"
     t.boolean "usage_ping_enabled", default: true, null: false
     t.string "uuid"
+=======
+    t.string "default_artifacts_expire_in", default: "0", null: false
+>>>>>>> Preloads head pipeline for each merge request
   end
 
   create_table "audit_events", force: :cascade do |t|
@@ -672,7 +675,11 @@ ActiveRecord::Schema.define(version: 20170426181740) do
     t.text "title_html"
     t.text "description_html"
     t.integer "time_estimate"
+<<<<<<< 6ae76738dde8fecb117f7706ae2ef74c1d83cdb7
     t.integer "cached_markdown_version"
+=======
+    t.integer "head_pipeline_id"
+>>>>>>> Preloads head pipeline for each merge request
   end
 
   add_index "merge_requests", ["assignee_id"], name: "index_merge_requests_on_assignee_id", using: :btree
