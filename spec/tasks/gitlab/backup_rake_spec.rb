@@ -228,13 +228,21 @@ describe 'gitlab:app namespace rake task' do
       let(:project_b) { create(:project, :repository, repository_storage: 'custom') }
 
       before do
+        gitaly_address = Gitlab.config.repositories.storages.default.gitaly_address
         FileUtils.mkdir('tmp/tests/default_storage')
         FileUtils.mkdir('tmp/tests/custom_storage')
         storages = {
-          'default' => { 'path' => Settings.absolute('tmp/tests/default_storage') },
-          'custom' => { 'path' => Settings.absolute('tmp/tests/custom_storage') }
+          'default' => {
+            'path' => Settings.absolute('tmp/tests/default_storage'),
+            'gitaly_address' => gitaly_address
+          },
+          'custom' => {
+            'path' => Settings.absolute('tmp/tests/custom_storage'),
+            'gitaly_address' => gitaly_address
+          }
         }
         allow(Gitlab.config.repositories).to receive(:storages).and_return(storages)
+        Gitlab::GitalyClient.configure_channels
 
         # Create the projects now, after mocking the settings but before doing the backup
         project_a
@@ -249,6 +257,10 @@ describe 'gitlab:app namespace rake task' do
         FileUtils.rm_rf('tmp/tests/default_storage')
         FileUtils.rm_rf('tmp/tests/custom_storage')
         FileUtils.rm(@backup_tar)
+
+        # We unstub the storages to be able to reconfigure the actual Gitaly channels
+        allow(Gitlab.config.repositories).to receive(:storages).and_call_original
+        Gitlab::GitalyClient.configure_channels
       end
 
       it 'includes repositories in all repository storages' do
