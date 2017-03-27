@@ -72,6 +72,16 @@ w.gl.utils.removeParams = (params) => {
   });
   return url.href;
 };
+w.gl.utils.updateParamQueryString = function(url, paramName, newValue) {
+  // match the current key/value pair for a particular query param
+  const re = new RegExp(`([?&])${paramName}=.*?(&|$)`, 'i');
+  if (re.test(url)) {
+    return url.replace(re, `$1${paramName}=${newValue}$2`);
+  }
+
+  const sep = url.indexOf('?') !== -1 ? '&' : '?';
+  return `${url}${sep}${paramName}=${newValue}`;
+};
 w.gl.utils.getLocationHash = function(url) {
   var hashIndex;
   if (typeof url === 'undefined') {
@@ -82,7 +92,6 @@ w.gl.utils.getLocationHash = function(url) {
   hashIndex = url.indexOf('#');
   return hashIndex === -1 ? null : url.substring(hashIndex + 1);
 };
-
 w.gl.utils.refreshCurrentPage = () => gl.utils.visitUrl(document.location.href);
 
 w.gl.utils.visitUrl = (url) => {
