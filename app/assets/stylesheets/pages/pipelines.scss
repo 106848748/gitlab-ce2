@@ -316,6 +316,16 @@
   }
 }
 
+.pipeline-status-icon {
+  margin-right: 10px;
+  font-size: 0;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 // Pipeline graph
 .pipeline-graph {
   width: 100%;
