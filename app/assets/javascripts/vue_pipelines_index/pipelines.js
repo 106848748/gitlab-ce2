@@ -191,7 +191,6 @@ export default {
       if (!this.isMakingRequest) {
         this.isLoading = true;
 
-<<<<<<< HEAD
         this.service.getPipelines({ scope: this.scopeParameter, page: this.pageParameter })
           .then(response => this.successCallback(response))
           .catch(() => this.errorCallback());
