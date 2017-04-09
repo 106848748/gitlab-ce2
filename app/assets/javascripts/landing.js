@@ -26,7 +26,7 @@ class Landing {
 
   dismissLanding() {
     this.landingElement.classList.add('hidden');
-    Cookies.set(this.cookieName, true);
+    Cookies.set(this.cookieName, true, { expires: 365 });
   }
 
   isDismissed() {

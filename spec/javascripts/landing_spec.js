@@ -141,7 +141,7 @@ describe('Landing', function () {
     });
 
     it('should call Cookies.set', function () {
-      expect(Cookies.set).toHaveBeenCalledWith(this.cookieName, true);
+      expect(Cookies.set).toHaveBeenCalledWith(this.cookieName, true, { expires: 365 });
     });
   });
 
