@@ -52,7 +52,7 @@ const BoardsMockData = {
 const boardsMockInterceptor = (request, next) => {
   const body = BoardsMockData[request.method][request.url];
 
-  next(request.respondWith(JSON.stringify(body), {
+  next(request.respondWith(body, {
     status: 200
   }));
 };
