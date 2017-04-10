@@ -7,9 +7,8 @@ you through better understanding GitLab's concepts
 through our regular docs, and, when available, through articles (guides,
 tutorials, technical overviews, blog posts) and videos.
 
-- [Authentication](authentication/index.md)
-- [Continuous Integration (GitLab CI)](../ci/README.md)
 - [GitLab Installation](../install/README.md)
+- [Continuous Integration (GitLab CI)](../ci/README.md)
 - [GitLab Pages](../user/project/pages/index.md)
 
 >**Note:** More topics will be available soon.
