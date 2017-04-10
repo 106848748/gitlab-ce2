@@ -125,7 +125,7 @@ export default Vue.component('pipelines-table', {
     },
 
     successCallback(resp) {
-      const response = resp.json();
+      const response = resp.body;
 
       // depending of the endpoint the response can either bring a `pipelines` key or not.
       const pipelines = response.pipelines || response;

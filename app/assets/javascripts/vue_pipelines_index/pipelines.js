@@ -198,14 +198,12 @@ export default {
     },
 
     successCallback(resp) {
-      const response = {
-        headers: resp.headers,
-        body: resp.json(),
-      };
+      const body = resp.body;
+      const headers = resp.headers;
 
-      this.store.storeCount(response.body.count);
-      this.store.storePipelines(response.body.pipelines);
-      this.store.storePagination(response.headers);
+      this.store.storeCount(body.count);
+      this.store.storePipelines(body.pipelines);
+      this.store.storePagination(headers);
 
       this.isLoading = false;
     },

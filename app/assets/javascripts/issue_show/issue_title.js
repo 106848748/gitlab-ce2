@@ -45,7 +45,7 @@ export default {
       });
     },
     renderResponse(res) {
-      const body = JSON.parse(res.body);
+      const body = res.body;
       this.triggerAnimation(body);
     },
     triggerAnimation(body) {
