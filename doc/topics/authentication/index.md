@@ -10,7 +10,7 @@ This page gathers all the resources for the topic **Authentication** within GitL
   - [Support for Universal 2nd Factor Authentication - YubiKeys](https://about.gitlab.com/2016/06/22/gitlab-adds-support-for-u2f/)
   - [Security Webcast with Yubico](https://about.gitlab.com/2016/08/31/gitlab-and-yubico-security-webcast/)
 - **Integrations:**
-- [GitLab as OAuth2 authentication service provider](../integration/oauth_provider.md#introduction-to-oauth)
+  - [GitLab as OAuth2 authentication service provider](../integration/oauth_provider.md#introduction-to-oauth)
 
 ## GitLab administrators
 
@@ -18,6 +18,7 @@ This page gathers all the resources for the topic **Authentication** within GitL
 - [LDAP (Enterprise Edition)](https://docs.gitlab.com/ee/administration/auth/ldap-ee.md)
 - [Enforce Two-factor Authentication (2FA)](../../security/two_factor_authentication.md#enforce-two-factor-authentication-2fa)
 - **Articles:**
+  - [How to Configure LDAP with GitLab CE](how_to_configure_ldap_gitlab_ce.md)
   - [Feature Highlight: LDAP Integration](https://about.gitlab.com/2014/07/10/feature-highlight-ldap-sync/)
   - [Debugging LDAP](https://about.gitlab.com/handbook/support/workflows/ldap/debugging_ldap.md)
 - **Integrations:**
