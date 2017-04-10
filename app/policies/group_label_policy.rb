@@ -1,3 +1,3 @@
 class GroupLabelPolicy < BasePolicy
-  delegate { @subject.project }
+  delegate { @subject.group }
 end
