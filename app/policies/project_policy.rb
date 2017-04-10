@@ -293,15 +293,21 @@ class ProjectPolicy < BasePolicy
   def is_team_member?
     return false if @user.nil?
 
+    greedy_load = false
+
     # when scoping by subject, we want to be greedy
     # and load *all* the members with one query.
-    #
-    # otherwise we just make a specific query for
-    # this particular user.
-    case DeclarativePolicy.preferred_scope
-    when :subject
+    greedy_load ||= DeclarativePolicy.preferred_scope == :subject
+
+    # in this case we're likely to have loaded #members already
+    # anyways, and #member? would fail with an error
+    greedy_load ||= !@user.persisted?
+
+    if greedy_load
       project.team.members.include?(user)
     else
+      # otherwise we just make a specific query for
+      # this particular user.
       project.team.member?(user)
     end
   end
