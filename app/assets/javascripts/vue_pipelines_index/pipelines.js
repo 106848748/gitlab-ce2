@@ -217,25 +217,6 @@ export default {
 
     setIsMakingRequest(isMakingRequest) {
       this.isMakingRequest = isMakingRequest;
-      this.isLoading = true;
-
-      return this.service.getPipelines(scope, pageNumber)
-        .then(resp => ({
-          headers: resp.headers,
-          body: resp.body,
-        }))
-        .then((response) => {
-          this.store.storeCount(response.body.count);
-          this.store.storePipelines(response.body.pipelines);
-          this.store.storePagination(response.headers);
-        })
-        .then(() => {
-          this.isLoading = false;
-        })
-        .catch(() => {
-          this.hasError = true;
-          this.isLoading = false;
-        });
     },
   },
 
