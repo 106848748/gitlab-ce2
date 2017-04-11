@@ -13,6 +13,7 @@ class UserPolicy < BasePolicy
   condition(:subject_ghost, scope: :subject) { @subject.ghost? }
 
   rule { ~restricted_public_level }.enable :read_user
+  rule { ~anonymous }.enable :read_user
 
   rule { own_user | admin }.enable :destroy_user
   rule { subject_ghost }.prevent :destroy_user
