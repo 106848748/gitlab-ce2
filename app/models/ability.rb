@@ -32,8 +32,21 @@ class Ability
       allowed?(user, :edit_note, note)
     end
 
-    def allowed?(user, action, subject = :global)
-      policy_for(user, subject).can?(action)
+    def allowed?(user, action, subject = :global, opts={})
+      if subject.is_a?(Hash)
+        opts, subject = subject, :global
+      end
+
+      policy = policy_for(user, subject)
+
+      case opts[:scope]
+      when :user
+        DeclarativePolicy.user_scope { policy.can?(action) }
+      when :subject
+        DeclarativePolicy.subject_scope { policy.can?(action) }
+      else
+        policy.can?(action)
+      end
     end
 
     def policy_for(user, subject = :global)
