@@ -9,6 +9,7 @@ tutorials, technical overviews, blog posts) and videos.
 
 - [Authentication](authentication/index.md)
 - [Continuous Integration (GitLab CI)](../ci/README.md)
+- [Git](git/index.md)
 - [GitLab Installation](../install/README.md)
 - [GitLab Pages](../user/project/pages/index.md)
 
