@@ -248,7 +248,7 @@ After configuring LDAP, basic authentication will be available. Users can then l
 
 ![GitLab OU Structure](img/how_to_configure_ldap_gitlab_ce/user_auth.gif)
 
-Users that are removed from the LDAP base group (e.g `OU=GitLab INT,DC=GitLab,DC=org`) will be **blocked** in GitLab. [More information](https://docs.gitlab.com/ee/administration/auth/ldap.html#security) on LDAP security.
+Users that are removed from the LDAP base group (e.g `OU=GitLab INT,DC=GitLab,DC=org`) will be **blocked** in GitLab. [More information](../../administration/auth/ldap.md#security) on LDAP security.
 
 If `allow_username_or_email_login` is enabled in the LDAP configuration, GitLab will ignore everything after the first '@' in the LDAP username used on login. Example: The username `jon.doe@example.com` is converted to `jon.doe` when authenticating with the LDAP server. Disable this setting if you use `userPrincipalName` as the `uid`.
 
