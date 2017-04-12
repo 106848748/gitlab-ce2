@@ -87,6 +87,7 @@ class Spinach::Features::ProjectSourceBrowseFiles < Spinach::FeatureSteps
 
   step 'I fill the new branch name' do
     first('button.js-target-branch', visible: true).click
+    sleep 0.2
     first('.create-new-branch', visible: true).click
     first('#new_branch_name', visible: true).set('new_branch_name')
     first('.js-new-branch-btn', visible: true).click
