@@ -1,4 +1,4 @@
-# How to Configure LDAP with GitLab CE
+# How to configure LDAP with GitLab CE
 
 > **Type:** admin guide ||
 > **Level:** intermediary ||
