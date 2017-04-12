@@ -12,7 +12,7 @@ In this guide we will focus on configuring GitLab with Active Directory. [Active
 
 GitLab has supported LDAP integration since [version 2.2](https://about.gitlab.com/2012/02/22/gitlab-version-2-2/). With GitLab LDAP [group syncing](#group-syncing-ee) being added to GitLab Enterprise Edition in [version 6.0](https://about.gitlab.com/2013/08/20/gitlab-6-dot-0-released/). LDAP integration has become one of the most popular features in GitLab.
 
-## Getting Started
+## Getting started
 
 ### Choosing an LDAP Server
 
@@ -101,7 +101,7 @@ Global Admins     GitLab.org/GitLab INT/Global Groups/Global Admins
 
 > See [more information](https://technet.microsoft.com/en-us/library/ff730967.aspx) on searching Active Directory with Windows PowerShell from [The Scripting Guys](https://technet.microsoft.com/en-us/scriptcenter/dd901334.aspx)
 
-## GitLab LDAP Configuration
+## GitLab LDAP configuration
 
 The initial configuration of LDAP in GitLab requires changes to the `gitlab.rb` configuration file. Below is an example of a complete configuration using an Active Directory.
 
@@ -132,7 +132,7 @@ gitlab_rails['ldap_servers'] = {
 
 > **Note:** Remember to run  `gitlab-ctl reconfigure` after modifying `gitlab.rb`
 
-## Security Improvements (LDAPS)
+## Security improvements (LDAPS)
 
 Security is an important aspect when deploying an LDAP server. By default, LDAP traffic is transmitted unsecured. LDAP can be secured using SSL/TLS called LDAPS, or commonly "LDAP over SSL".
 
@@ -140,7 +140,7 @@ Securing LDAP (enabling LDAPS) on Windows Server 2012 involves installing a vali
 
 > By default a LDAP service listens for connections on TCP and UDP port 389. LDAPS (LDAP over SSL) listens on port 636
 
-### Testing you AD Server
+### Testing you AD server
 
 #### Using **AdFind** (Windows)
 
@@ -242,7 +242,7 @@ result: 0 Success
 # numEntries: 1
 ```
 
-## Basic User Authentication
+## Basic user authentication
 
 After configuring LDAP, basic authentication will be available. Users can then login using their directory credentials. An extra tab is added to the GitLab login screen for the configured LDAP server (e.g "**GitLab AD**").
 
