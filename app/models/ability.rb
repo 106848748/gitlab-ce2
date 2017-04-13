@@ -32,7 +32,7 @@ class Ability
       allowed?(user, :edit_note, note)
     end
 
-    def allowed?(user, action, subject = :global, opts={})
+    def allowed?(user, action, subject = :global, opts = {})
       if subject.is_a?(Hash)
         opts, subject = subject, :global
       end

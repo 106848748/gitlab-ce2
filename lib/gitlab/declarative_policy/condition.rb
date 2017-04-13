@@ -52,8 +52,6 @@ module DeclarativePolicy
     private
 
     def cache_key
-      condition_key = @condition.key
-
       case @condition.scope
       when :normal  then "/dp/ability/#{@condition.key}/#{user_key},#{subject_key}"
       when :user    then "/dp/ability/#{@condition.key}/#{user_key}"

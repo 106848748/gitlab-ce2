@@ -292,7 +292,7 @@ class ProjectPolicy < BasePolicy
   def is_team_member?
     return false if @user.nil?
 
-    greedy_load = false
+    greedy_load_subject = false
 
     # when scoping by subject, we want to be greedy
     # and load *all* the members with one query.
