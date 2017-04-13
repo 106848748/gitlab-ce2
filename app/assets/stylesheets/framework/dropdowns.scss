@@ -277,15 +277,20 @@
   }
 }
 
+.filtered-search-box-input-container .dropdown-menu,
+.filtered-search-box-input-container .dropdown-menu-nav,
+.comment-type-dropdown .dropdown-menu {
+  display: none;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
 .filtered-search-box-input-container {
   .dropdown-menu,
   .dropdown-menu-nav {
-    display: none;
     max-width: 280px;
     width: auto;
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
   }
 }
 
