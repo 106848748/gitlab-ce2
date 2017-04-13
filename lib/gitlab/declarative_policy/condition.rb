@@ -1,11 +1,14 @@
 module DeclarativePolicy
   class Condition
-    attr_reader :name, :description, :scope, :manual_score
+    attr_reader :name, :description, :scope
+    attr_reader :manual_score
+    attr_reader :context_key
     def initialize(name, description, opts = {}, &compute)
       @name = name
       @description = description
       @compute = compute
       @scope = opts.fetch(:scope, :normal)
+      @context_key = opts[:context_key]
       @manual_score = opts.fetch(:score, nil)
     end
 
@@ -15,6 +18,10 @@ module DeclarativePolicy
 
     def compute(context)
       !!context.instance_eval(&@compute)
+    end
+
+    def key
+      "#{@context_key}/#{@name}"
     end
   end
 
@@ -45,14 +52,13 @@ module DeclarativePolicy
     private
 
     def cache_key
-      name = @condition.name
-      context_name = @context.class.name
+      condition_key = @condition.key
 
       case @condition.scope
-      when :normal  then "/dp/ability/#{context_name}/#{user_key},#{subject_key}/#{name}"
-      when :user    then "/dp/ability/#{context_name}/#{user_key}/#{name}"
-      when :subject then "/dp/ability/#{context_name}/#{subject_key}/#{name}"
-      when :global  then "/dp/ability/#{context_name}/#{name}"
+      when :normal  then "/dp/ability/#{@condition.key}/#{user_key},#{subject_key}"
+      when :user    then "/dp/ability/#{@condition.key}/#{user_key}"
+      when :subject then "/dp/ability/#{@condition.key}/#{subject_key}"
+      when :global  then "/dp/ability/#{@condition.key}"
       else raise 'invalid scope'
       end
     end

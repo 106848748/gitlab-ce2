@@ -109,6 +109,7 @@ module DeclarativePolicy
       def condition(name, opts = {}, &value)
         name = name.to_sym
         description, @last_description = @last_description, nil
+        opts[:context_key] ||= self.name
         condition = Condition.new(name, description, opts, &value)
 
         self.own_conditions[name] = condition
