@@ -120,11 +120,6 @@ class ProjectPolicy < BasePolicy
     enable :read_cycle_analytics
   end
 
-  rule { public_builds & can?(:guest_access) }.policy do
-    enable :read_pipeline
-    enable :read_build
-  end
-
   rule { can?(:reporter_access) }.policy do
     enable :download_code
     enable :download_wiki_code
@@ -274,8 +269,12 @@ class ProjectPolicy < BasePolicy
     enable :read_issue
   end
 
-  rule { anonymous & public_builds }.policy do
+  rule { public_builds }.policy do
     enable :read_build
+  end
+
+  rule { public_builds & can?(:guest_access) }.policy do
+    enable :read_pipeline
   end
 
   rule { issues_disabled }.policy do
