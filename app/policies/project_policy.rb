@@ -296,14 +296,16 @@ class ProjectPolicy < BasePolicy
 
     # when scoping by subject, we want to be greedy
     # and load *all* the members with one query.
-    greedy_load ||= DeclarativePolicy.preferred_scope == :subject
+    greedy_load_subject ||= DeclarativePolicy.preferred_scope == :subject
 
     # in this case we're likely to have loaded #members already
     # anyways, and #member? would fail with an error
-    greedy_load ||= !@user.persisted?
+    greedy_load_subject ||= !@user.persisted?
 
-    if greedy_load
+    if greedy_load_subject
       project.team.members.include?(user)
+    elsif DeclarativePolicy.preferred_scope == :user
+      user.authorized_projects.include?(user)
     else
       # otherwise we just make a specific query for
       # this particular user.
