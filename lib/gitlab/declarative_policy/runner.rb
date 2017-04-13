@@ -29,7 +29,7 @@ module DeclarativePolicy
 
     attr_reader :steps
     def initialize(steps)
-      @steps = steps.flat_map(&:flattened)
+      @steps = steps.flat_map { |s| s.flattened(steps) }
     end
 
     def cached?

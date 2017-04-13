@@ -79,6 +79,7 @@ module DeclarativePolicy
     end
 
     class Ability < Base
+      attr_reader :ability
       def initialize(ability)
         @ability = ability
       end
