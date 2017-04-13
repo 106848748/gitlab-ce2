@@ -333,7 +333,7 @@ class ProjectPolicy < BasePolicy
     when ProjectFeature::DISABLED
       false
     when ProjectFeature::PRIVATE
-      team_member? || admin?
+      guest? || admin?
     else
       true
     end
