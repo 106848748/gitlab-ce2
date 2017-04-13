@@ -1,6 +1,4 @@
 class GlobalPolicy < BasePolicy
-  condition(:can_create_group, scope: :user) { @user.can_create_group }
-
   desc "User is blocked"
   condition(:blocked, scope: :user) { @user.blocked? }
 

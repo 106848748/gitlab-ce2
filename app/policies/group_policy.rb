@@ -1,6 +1,4 @@
 class GroupPolicy < BasePolicy
-  delegate { :global }
-
   desc "Group is public"
   condition(:public_group, scope: :subject) { @subject.public? }
   condition(:logged_in_viewable) { @user && @subject.internal? && !@user.external? }
