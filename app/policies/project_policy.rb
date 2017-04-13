@@ -211,7 +211,7 @@ class ProjectPolicy < BasePolicy
     prevent(*crua(:merge_request))
   end
 
-  rule { issues_disabled | merge_requests_disabled }.policy do
+  rule { issues_disabled & merge_requests_disabled }.policy do
     prevent(*crua(:label))
     prevent(*crua(:milestone))
   end
