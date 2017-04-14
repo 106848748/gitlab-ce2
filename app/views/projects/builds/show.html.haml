@@ -1,11 +1,16 @@
+- content_for :page_specific_javascripts do
+  = page_specific_javascript_bundle_tag('job_page')
+
 - @no_container = true
 - page_title "#{@build.name} (##{@build.id})", "Jobs"
 = render "projects/pipelines/head"
 
-%div{ class: container_class }
+
+#job-page-app{ class: container_class }
+  %job-page-header{ ':user' => 'job.user', ':job-id' => 'job.jobId', ':retry-job-url' => 'job.retryJobUrl', ':new-issue-url' => 'job.newIssueUrl', ':triggered-at' => 'job.triggeredAt', ':ci-status' => 'job.ciStatus', ':ci-status-title' => 'job.ciStatusTitle' }
+  %job-details-sidebar
   .build-page
     = render "header"
-
     - if @build.stuck?
       - unless @build.any_runners_online?
         .bs-callout.bs-callout-warning

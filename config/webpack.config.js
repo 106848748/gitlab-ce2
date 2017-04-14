@@ -34,6 +34,7 @@ var config = {
     graphs:               './graphs/graphs_bundle.js',
     groups_list:          './groups_list.js',
     issuable:             './issuable/issuable_bundle.js',
+    job_page:             './job_page/job_page_bundle.js',
     merge_conflicts:      './merge_conflicts/merge_conflicts_bundle.js',
     merge_request_widget: './merge_request_widget/ci_bundle.js',
     monitoring:           './monitoring/monitoring_bundle.js',
