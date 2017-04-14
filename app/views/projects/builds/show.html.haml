@@ -5,9 +5,18 @@
 - page_title "#{@build.name} (##{@build.id})", "Jobs"
 = render "projects/pipelines/head"
 
-
-#job-page-app{ class: container_class }
-  %job-page-header{ ':user' => 'job.user', ':job-id' => 'job.jobId', ':retry-job-url' => 'job.retryJobUrl', ':new-issue-url' => 'job.newIssueUrl', ':triggered-at' => 'job.triggeredAt', ':ci-status' => 'job.ciStatus', ':ci-status-title' => 'job.ciStatusTitle' }
+// Dataset should mirror ajax request update format
+#job-page-app{ class: container_class, data: { 'job-id' => @build.id,
+  'job-triggered-at' => @build.created_at,
+  'ci-status-title-text' => @build.status_title.to_s,
+  'job-failed' => @build.failed?.to_s,
+  'job-retryable' => @build.retryable?.to_s,
+  'ci-status-text' => @build.detailed_status(current_user).text,
+  'job-owner' => @build.user.to_json(only: [:username, :name, :avatar ]),
+  'user-can-create-issue' => can?(current_user, :create_issue, @project).to_s,
+  'user-can-retry-job' => can?(current_user, :update_build, @build).to_s,
+  'retry-job-url' => retry_namespace_project_build_path(@project.namespace, @project, @build),
+  'new-issue-url' => new_namespace_project_issue_path(@project.namespace, @project, issue: build_failed_issue_options) }}
   %job-details-sidebar
   .build-page
     = render "header"
