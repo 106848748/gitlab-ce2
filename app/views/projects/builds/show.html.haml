@@ -17,7 +17,6 @@
   'user-can-retry-job' => can?(current_user, :update_build, @build).to_s,
   'retry-job-url' => retry_namespace_project_build_path(@project.namespace, @project, @build),
   'new-issue-url' => new_namespace_project_issue_path(@project.namespace, @project, issue: build_failed_issue_options) }}
-  %job-details-sidebar
   .build-page
     = render "header"
     - if @build.stuck?
@@ -96,5 +95,8 @@
         #down-build-trace
 
   = render "sidebar"
+  %job-details-sidebar{ 'inline-template' => true }
+    %job-details-stuff-you-can-do
+    %jobs-dropdown-selector-thing-not-markup
 
 .js-build-options{ data: javascript_build_options }

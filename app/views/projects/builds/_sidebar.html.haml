@@ -1,3 +1,10 @@
+%job-details-sidebar{ 'inline-template' => true }
+  %job-details-stuff-you-can-do
+  %jobs-dropdown-selector-thing-just-regular-markup-not-acomponent
+
+- build.id, coverage, artifacts, artifacts_expire_at,
+- artifacts_expired, has_expiring_artifacts,
+- user can read_build, user can update build
 - builds = @build.pipeline.builds.to_a
 
 %aside.right-sidebar.right-sidebar-expanded.build-sidebar.js-build-sidebar.js-right-sidebar{ data: { "offset-top" => "153", "spy" => "affix" } }
@@ -103,6 +110,7 @@
       %p.build-light-text.append-bottom-0
         #{@build.pipeline.git_commit_title}
 
+    // Don't touch anything from here down
     - if @build.tags.any?
       .block
         .title
