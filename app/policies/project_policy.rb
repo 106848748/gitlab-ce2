@@ -71,8 +71,9 @@ class ProjectPolicy < BasePolicy
   ]
 
   features.each do |f|
+    # these are scored high because they are unlikely
     desc "Project has #{f} disabled"
-    condition(:"#{f}_disabled") { !feature_available?(f.to_sym) }
+    condition(:"#{f}_disabled", score: 32) { !feature_available?(f.to_sym) }
   end
 
   rule { guest }.enable :guest_access
