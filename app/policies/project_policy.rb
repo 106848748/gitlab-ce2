@@ -305,12 +305,10 @@ class ProjectPolicy < BasePolicy
 
     if greedy_load_subject
       project.team.members.include?(user)
-    elsif DeclarativePolicy.preferred_scope == :user
-      user.authorized_projects.include?(user)
     else
       # otherwise we just make a specific query for
       # this particular user.
-      project.team.member?(user)
+      team_access_level >= Gitlab::Access::GUEST
     end
   end
 
@@ -326,7 +324,9 @@ class ProjectPolicy < BasePolicy
 
   def team_access_level
     return -1 if anonymous?
-    @team_access_level ||= project.team.max_member_access(user.id)
+
+    # NOTE: max_member_access has its own cache
+    project.team.max_member_access(user.id)
   end
 
   def feature_available?(feature)
