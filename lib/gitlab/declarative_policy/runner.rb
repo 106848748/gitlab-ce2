@@ -94,6 +94,10 @@ module DeclarativePolicy
       loop do
         return if steps.empty?
 
+        # if the permission hasn't yet been enabled and we only have
+        # prevent steps left, we short-circuit the state here
+        @state.prevent! if !@state.enabled? && steps.all? { |s| s.action == :prevent }
+
         lowest_score = 1.0 / 0 # infinity
         next_step = nil
 
