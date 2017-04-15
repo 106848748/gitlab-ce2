@@ -1,5 +1,6 @@
 <script>
 import Timeago from 'timeago.js';
+import UserAvatarLink from '../../vue_shared/components/user_avatar/user_avatar_link';
 import '../../lib/utils/text_utility';
 import ActionsComponent from './environment_actions.vue';
 import ExternalUrlComponent from './environment_external_url.vue';
@@ -26,6 +27,7 @@ export default {
     'rollback-component': RollbackComponent,
     'terminal-button-component': TerminalButtonComponent,
     'monitoring-button-component': MonitoringButtonComponent,
+    'user-avatar-link': UserAvatarLink,
   },
 
   props: {
@@ -487,15 +489,13 @@ export default {
 
       <span v-if="!model.isFolder && deploymentHasUser">
         by
-        <a
+        <user-avatar-link
+          class="js-deploy-user-container"
           :href="deploymentUser.web_url"
-          class="js-deploy-user-container">
-          <img
-            class="avatar has-tooltip s20"
-            :src="deploymentUser.avatar_url"
-            :alt="userImageAltDescription"
-            :title="deploymentUser.username" />
-        </a>
+          :img-src="deploymentUser.avatar_url"
+          :img-alt="userImageAltDescription"
+          :tooltip-text="deploymentUser.username"
+        />
       </span>
     </td>
 

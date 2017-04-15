@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import Vue from 'vue';
+import UserAvatarImage from '../../vue_shared/components/user_avatar/user_avatar_image';
 import iconBranch from '../svg/icon_branch.svg';
 
 const global = window.gl || (window.gl = {});
@@ -13,6 +14,9 @@ global.cycleAnalytics.StageStagingComponent = Vue.extend({
   data() {
     return { iconBranch };
   },
+  components: {
+    'user-avatar-image': UserAvatarImage,
+  },
   template: `
     <div>
       <div class="events-description">
@@ -22,7 +26,8 @@ global.cycleAnalytics.StageStagingComponent = Vue.extend({
       <ul class="stage-event-list">
         <li v-for="build in items" class="stage-event-item item-build-component">
           <div class="item-details">
-            <img class="avatar" :src="build.author.avatarUrl">
+            <!-- FIXME: Pass an alt attribute here for accessibility -->
+            <user-avatar-image :src="build.author.avatarUrl"/>
             <h5 class="item-title">
               <a :href="build.url" class="pipeline-id">#{{ build.id }}</a>
               <i class="fa fa-code-fork"></i>

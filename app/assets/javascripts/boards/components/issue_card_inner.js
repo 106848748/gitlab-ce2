@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import UserAvatarLink from '../../vue_shared/components/user_avatar/user_avatar_link';
 import eventHub from '../eventhub';
 
 const Store = gl.issueBoards.BoardsStore;
@@ -30,6 +31,9 @@ gl.issueBoards.IssueCardInner = Vue.extend({
       required: false,
       default: false,
     },
+  },
+  components: {
+    'user-avatar-link': UserAvatarLink,
   },
   computed: {
     cardUrl() {
@@ -105,21 +109,15 @@ gl.issueBoards.IssueCardInner = Vue.extend({
             {{ issueId }}
           </span>
         </h4>
-        <a
-          class="card-assignee has-tooltip js-no-trigger"
+        <user-avatar-link
+          v-if="assigneeUrl"
+          class="card-assignee js-no-trigger"
           :href="assigneeUrl"
-          :title="assigneeUrlTitle"
-          v-if="issue.assignee"
-          data-container="body"
-        >
-          <img
-            class="avatar avatar-inline s20 js-no-trigger"
-            :src="issue.assignee.avatar"
-            width="20"
-            height="20"
-            :alt="avatarUrlTitle"
-          />
-        </a>
+          :img-alt="avatarUrlTitle"
+          :img-src="issue.assignee.avatar"
+          :img-size="20"
+          :tooltip-text="issue.assignee.name"
+        />
       </div>
       <div class="card-footer" v-if="showLabelFooter">
         <button
