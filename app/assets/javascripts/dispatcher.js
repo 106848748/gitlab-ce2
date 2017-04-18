@@ -36,7 +36,7 @@
 /* global ShortcutsWiki */
 
 import Issue from './issue';
-
+import Lightbox from './gl_lightbox';
 import BindInOut from './behaviors/bind_in_out';
 import Group from './group';
 import GroupName from './group_name';
@@ -125,6 +125,7 @@ const ShortcutsBlob = require('./shortcuts_blob');
           new Issue();
           shortcut_handler = new ShortcutsIssuable();
           new ZenMode();
+          new Lightbox();
           break;
         case 'projects:milestones:show':
         case 'groups:milestones:show':
@@ -168,6 +169,7 @@ const ShortcutsBlob = require('./shortcuts_blob');
           shortcut_handler = new ShortcutsNavigation();
           new gl.GLForm($('.issue-form'));
           new IssuableForm($('.issue-form'));
+          new Lightbox();
           new LabelsSelect();
           new MilestoneSelect();
           new gl.IssuableTemplateSelectors();
@@ -179,6 +181,7 @@ const ShortcutsBlob = require('./shortcuts_blob');
           shortcut_handler = new ShortcutsNavigation();
           new gl.GLForm($('.merge-request-form'));
           new IssuableForm($('.merge-request-form'));
+          new Lightbox();
           new LabelsSelect();
           new MilestoneSelect();
           new gl.IssuableTemplateSelectors();
@@ -195,6 +198,7 @@ const ShortcutsBlob = require('./shortcuts_blob');
           new gl.Diff();
           shortcut_handler = new ShortcutsIssuable(true);
           new ZenMode();
+          new Lightbox();
           new MergedButtons();
           break;
         case 'projects:merge_requests:commits':
@@ -203,6 +207,7 @@ const ShortcutsBlob = require('./shortcuts_blob');
         case "projects:merge_requests:diffs":
           new gl.Diff();
           new ZenMode();
+          new Lightbox();
           new MergedButtons();
           break;
         case 'dashboard:activity':

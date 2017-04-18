@@ -9,10 +9,8 @@ module Banzai
         doc.xpath('descendant-or-self::img[not(ancestor::a)]').each do |img|
           link = doc.document.create_element(
             'a',
-            class: 'no-attachment-icon',
-            href: img['src'],
-            target: '_blank',
-            rel: 'noopener noreferrer'
+            href: '#',
+            class: 'no-attachment-icon'
           )
 
           link.children = img.clone

@@ -5,7 +5,6 @@ require('./flash');
 require('~/lib/utils/text_utility');
 require('vendor/jquery.waitforimages');
 require('./task_list');
-require('./gl_lightbox');
 
 class Issue {
   constructor() {

@@ -1,73 +1,82 @@
-/* eslint-disable no-new */
-/* jshint esversion: 6 */
-
-$(() => {
-  const IMAGE_SELECTOR = '.no-attachment-icon';
-
-  class GitLabLightbox {
-    constructor() {
-      this.$lightbox = null;
-      this.$lbLink = null;
-      this.$lbImage = null;
-      this.$closeBtn = null;
-      this.initLightbox();
-      this.addBindings();
-    }
-
-    initLightbox() {
-      /* Create base lightbox template
-      <div class="gl-lightbox">
-        <i class="fa fa-close dismiss"></i>
-        <a href="#" target="_blank">
+export default class Lightbox {
+  constructor(selector) {
+    this.selector = selector || 'a.no-attachment-icon img';
+    this.modal = null;
+    this.modalDialog = null;
+    this.link = null;
+    this.image = null;
+    this.images = null;
+    this.buffer = 60;
+    this.bsMobile = 576;
+    this.maxWidth = 'none';
+    this.template = `
+      <div class="lb-modal modal fade"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="">
+      <div class="modal-dialog">
+        <a href="" target="_blank" rel="noopener noreferrer">
           <img src="" alt="" />
         </a>
       </div>
-      */
-      if (!document.querySelector('.gl-lightbox')) {
-        this.$lightbox = $('<div/>', { class: 'gl-lightbox' });
-        this.$closeBtn = $('<i/>', { class: 'fa fa-close dismiss' });
-        this.$lbLink = $('<a/>', { href: '', target: '_blank' });
-        this.$lbImage = $('<img/>', { src: '' });
-        this.$lbLink.append(this.$lbImage);
-        this.$lightbox.append(this.$closeBtn);
-        this.$lightbox.append(this.$lbLink);
-        $('body').append(this.$lightbox);
-      }
-    }
+    </div>
+    `;
 
-    addBindings() {
-      this.$lightbox.on('click', this.hideLightbox.bind(this));
-      $(IMAGE_SELECTOR).on('click', this.showLightbox.bind(this));
-      $(document).on('scroll', this.hideLightbox.bind(this));
-      $(document).on('markdown-preview:fetched', this.addPreviewBindings.bind(this));
-      $(document).on('ajax:success', '.gfm-form', this.addNoteBinding.bind(this));
-    }
-
-    addPreviewBindings(e, $form) {
-      if (!$form) return;
-      $form.find(IMAGE_SELECTOR).on('click', this.showLightbox.bind(this));
-    }
-
-    addNoteBinding(e, data) {
-      $(`#note_${data.id} ${IMAGE_SELECTOR}`).on('click',
-       this.showLightbox.bind(this));
-    }
-
-    showLightbox(e) {
-      e.preventDefault();
-      this.$lightbox.addClass('show-box');
-      this.$lbLink.attr('href', e.target.src);
-      this.$lbImage.attr('src', e.target.src);
-      this.$lbImage.attr('alt', e.target.alt);
-    }
-
-    hideLightbox() {
-      this.$lightbox.removeClass('show-box');
-    }
+    this.initModal();
+    this.bindImages();
+    this.watchEvents();
   }
 
-  window.gl = window.gl || {};
-  window.gl.GitLabLightbox = GitLabLightbox;
+  initModal() {
+    this.modal = document.createElement('div');
+    this.modal.innerHTML = this.template;
+    this.modalDialog = this.modal.querySelector('.modal-dialog');
+    this.link = this.modal.querySelector('a');
+    this.image = this.modal.querySelector('img');
+    document.body.appendChild(this.modal);
+  }
 
-  new GitLabLightbox();
-});
+  bindImages() {
+    this.images = document.querySelectorAll(this.selector);
+    this.images.forEach((image) => {
+      Object.assign(image.dataset, {
+        toggle: 'modal',
+        target: '.lb-modal',
+      });
+      image.addEventListener('click', this.clickHandler.bind(this));
+    });
+  }
+
+  watchEvents() {
+    $(document).on('markdown-preview:fetched', this.addPreviewBindings.bind(this));
+    $(document).on('ajax:success', '.gfm-form', this.addNoteBinding.bind(this));
+  }
+
+  addPreviewBindings(e, $form) {
+    if (!$form) return;
+    const $img = $form.find(this.selector);
+    $img.attr('data-toggle', 'modal');
+    $img.attr('data-target', '.lb-modal');
+    $img.on('click', this.clickHandler.bind(this));
+  }
+
+  addNoteBinding(e, data) {
+    const $img = $(`#note_${data.id} ${this.selector}`);
+    $img.attr('data-toggle', 'modal');
+    $img.attr('data-target', '.lb-modal');
+    $img.on('click', this.clickHandler.bind(this));
+  }
+
+  clickHandler(e) {
+    e.preventDefault();
+    this.maxWidth = Math.min(e.target.naturalWidth, window.innerWidth - this.buffer);
+
+    this.maxWidth = window.innerWidth > this.bsMobile
+      ? this.maxWidth
+      : 'none';
+
+    this.link.setAttribute('href', e.target.src);
+    this.image.setAttribute('src', e.target.src);
+    this.modalDialog.style.maxWidth = `${this.maxWidth}px`;
+  }
+}
