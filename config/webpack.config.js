@@ -44,7 +44,7 @@ var config = {
     pdf_viewer:           './blob/pdf_viewer.js',
     pipelines:            './pipelines/index.js',
     profile:              './profile/profile_bundle.js',
-    protected_branches:   './protected_branches/protected_branches_bundle.js',
+    protected_branches:   './protected_branches/',
     protected_tags:       './protected_tags',
     snippet:              './snippet/snippet_bundle.js',
     sketch_viewer:        './blob/sketch_viewer.js',
