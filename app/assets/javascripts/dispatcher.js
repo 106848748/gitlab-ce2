@@ -46,6 +46,7 @@ import MiniPipelineGraph from './mini_pipeline_graph_dropdown';
 import BlobLinePermalinkUpdater from './blob/blob_line_permalink_updater';
 import BlobForkSuggestion from './blob/blob_fork_suggestion';
 import UserCallout from './user_callout';
+import { ProtectedBranchCreate, ProtectedBranchEditList } from './protected_branches';
 import { ProtectedTagCreate, ProtectedTagEditList } from './protected_tags';
 import ShortcutsWiki from './shortcuts_wiki';
 
@@ -337,8 +338,8 @@ const ShortcutsBlob = require('./shortcuts_blob');
           break;
         case 'projects:repository:show':
           // Initialize Protected Branch Settings
-          new gl.ProtectedBranchCreate();
-          new gl.ProtectedBranchEditList();
+          new ProtectedBranchCreate();
+          new ProtectedBranchEditList();
           // Initialize Protected Tag Settings
           new ProtectedTagCreate();
           new ProtectedTagEditList();
