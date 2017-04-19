@@ -87,6 +87,7 @@ require('./task_list');
       // Reopen and close actions for Issue/MR combined with note form submit
       $(document).on("click", ".js-comment-button", this.updateCloseButton);
       $(document).on("click", ".js-insta-comment-button", this.postComment);
+      $(document).on("click", ".js-insta-save-button", this.updateComment.bind(this));
       $(document).on("keyup input", ".js-note-text", this.updateTargetButtons);
       // resolve a discussion
       $(document).on('click', '.js-comment-resolve-button', this.resolveDiscussion);
@@ -1073,8 +1074,8 @@ require('./task_list');
       $notesList.append($note);
     };
 
-    Notes.prototype.createTemporaryNote = function($sampleNote, formContent, uniqueId) {
-      const $tempNote = $sampleNote.clone();
+    Notes.prototype.createPlaceholderNote = function($baseNote, formContent, uniqueId) {
+      const $tempNote = $baseNote.clone();
 
       // Set unique ID for later reference.
       $tempNote.attr('id', uniqueId);
@@ -1118,7 +1119,7 @@ require('./task_list');
         $lastLi = $notesContainer.find('.note:not(.system-note)').last();
       }
 
-      $notesContainer.append(this.createTemporaryNote($lastLi, formContent, uniqueId));
+      $notesContainer.append(this.createPlaceholderNote($lastLi, formContent, uniqueId));
       $form.find('.js-note-text').val('');
 
       $.ajax({
@@ -1131,6 +1132,32 @@ require('./task_list');
           $notesContainer.append(note.html).syntaxHighlight();
           gl.utils.localTimeAgo($notesContainer.find("#note_" + note.id + " .js-timeago"), false);
           self.updateNotesCount(1);
+        }
+      });
+    };
+
+    Notes.prototype.updateComment = function(e) {
+      const self = this;
+      const $form = $(e.target).parents('form');
+      const formData = $form.serialize();
+      const formContent = $form.find('.js-note-text').val();
+      const $editingNote = $form.parents('.note.is-editting');
+      const $noteBody = $editingNote.find('.js-task-list-container');
+
+      $noteBody.find('.md.note-text').html(formContent); // If we ever preview it, use preview instead!
+      $noteBody.find('.original-note-content').text(formContent);
+      $noteBody.find('.js-task-list-field').text(formContent);
+
+      $editingNote.removeClass('is-editting');
+      $editingNote.addClass('being-posted');
+      $editingNote.find('.note-headline-meta a').html('<i class="fa fa-spinner fa-spin"></i>');
+
+      $.ajax({
+        type: 'POST',
+        url: $form.attr('action'),
+        data: formData,
+        success(note) {
+          self.updateNote(null, note, null);
         }
       });
     };
