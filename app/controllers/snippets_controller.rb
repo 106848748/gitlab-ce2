@@ -2,6 +2,7 @@ class SnippetsController < ApplicationController
   include ToggleAwardEmoji
   include SpammableActions
   include SnippetsActions
+  include MarkdownActions
 
   before_action :snippet, only: [:show, :edit, :destroy, :update, :raw, :download]
 
@@ -59,6 +60,9 @@ class SnippetsController < ApplicationController
   end
 
   def show
+    @note = @snippet.notes.new(noteable: @snippet)
+    @notes = Banzai::NoteRenderer.render(@snippet.notes.fresh, nil, current_user)
+    @noteable = @snippet
   end
 
   def destroy
@@ -78,6 +82,10 @@ class SnippetsController < ApplicationController
   end
 
   protected
+
+  def review_context
+    { skip_project_check: true }
+  end
 
   def snippet
     @snippet ||= if current_user
