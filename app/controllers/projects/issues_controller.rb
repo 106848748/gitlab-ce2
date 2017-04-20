@@ -10,7 +10,7 @@ class Projects::IssuesController < Projects::ApplicationController
 
   before_action :redirect_to_external_issue_tracker, only: [:index, :new]
   before_action :module_enabled
-  before_action :issue, only: [:edit, :update, :show, :referenced_merge_requests,
+  before_action :issue, only: [:edit, :update, :show, :related_issues, :referenced_merge_requests,
                                :related_branches, :can_create_branch, :rendered_title]
 
   # Allow read any issue
@@ -157,6 +157,18 @@ class Projects::IssuesController < Projects::ApplicationController
 
   rescue ActiveRecord::StaleObjectError
     render_conflict_response
+  end
+
+  def related_issues
+    @related_branches = @issue.related_branches(current_user)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: view_to_html_string('projects/issues/_related_issues')
+        }
+      end
+    end
   end
 
   def referenced_merge_requests

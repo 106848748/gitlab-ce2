@@ -23,6 +23,7 @@ class Issue {
 
     Issue.$btnNewBranch = $('#new-branch');
 
+    Issue.initRelatedIssues();
     Issue.initMergeRequests();
     Issue.initRelatedBranches();
     Issue.initCanCreateBranch();
@@ -84,6 +85,18 @@ class Issue {
     if (noteText.trim().length > 0) {
       return form.submit();
     }
+  }
+
+  static initRelatedIssues() {
+    var $container;
+    $container = $('#related-issues');
+    return $.getJSON($container.data('url')).fail(function() {
+      return new Flash('Failed to load related issues');
+    }).done(function(data) {
+      if ('html' in data) {
+        return $container.html(data.html);
+      }
+    });
   }
 
   static initMergeRequests() {
