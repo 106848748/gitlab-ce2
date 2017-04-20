@@ -1,12 +1,9 @@
 require 'spec_helper'
 
 describe Projects::PipelinesController do
-  let(:user) { create(:user) }
-  let(:project) { create(:empty_project, :public) }
+  include ApiHelpers
 
-  before do
-    sign_in(user)
-  end
+  let(:project) { create(:empty_project, :public) }
 
   describe 'GET index.json' do
     before do
@@ -29,6 +26,7 @@ describe Projects::PipelinesController do
       expect(json_response['count']['running']).to eq 1
       expect(json_response['count']['pending']).to eq 1
       expect(json_response['count']['finished']).to eq 1
+      expect(json_response).not_to have_key('stages')
     end
   end
 
@@ -41,7 +39,7 @@ describe Projects::PipelinesController do
       expect(response).to have_http_status(:ok)
       expect(json_response).not_to be_an(Array)
       expect(json_response['id']).to be(pipeline.id)
-      expect(json_response).to have_key('jobs')
+      expect(json_response).to have_key('stages')
     end
   end
 
