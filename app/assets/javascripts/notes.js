@@ -4,6 +4,7 @@
 /* global ResolveService */
 /* global mrRefreshWidgetUrl */
 
+import $ from 'jquery';
 import Cookies from 'js-cookie';
 import CommentTypeToggle from './comment_type_toggle';
 
@@ -42,13 +43,17 @@ require('./task_list');
       this.refresh = bind(this.refresh, this);
       this.keydownNoteText = bind(this.keydownNoteText, this);
       this.toggleCommitList = bind(this.toggleCommitList, this);
+
       this.notes_url = notes_url;
       this.note_ids = note_ids;
+      // Used to keep track of updated notes while people are editing things
+      this.pendingLatestNoteMap = {};
       this.last_fetched_at = last_fetched_at;
       this.noteable_url = document.URL;
       this.notesCountBadge || (this.notesCountBadge = $(".issuable-details").find(".notes-tab .badge"));
       this.basePollingInterval = 15000;
       this.maxPollingSteps = 4;
+
       this.cleanBinding();
       this.addBinding();
       this.setPollingInterval();
@@ -128,7 +133,7 @@ require('./task_list');
       $(document).off("click", ".js-discussion-reply-button");
       $(document).off("click", ".js-add-diff-note-button");
       $(document).off("visibilitychange");
-      $(document).off("keyup", ".js-note-text");
+      $(document).off("keyup input", ".js-note-text");
       $(document).off("click", ".js-note-target-reopen");
       $(document).off("click", ".js-note-target-close");
       $(document).off("click", ".js-note-discard");
@@ -292,8 +297,7 @@ require('./task_list');
     Note: for rendering inline notes use renderDiscussionNote
      */
 
-    Notes.prototype.renderNote = function(note, $form) {
-      var $notesList;
+    Notes.prototype.renderNote = function(note, $form, $notesList = $('.main-notes-list')) {
       if (note.discussion_html != null) {
         return this.renderDiscussionNote(note, $form);
       }
@@ -306,18 +310,39 @@ require('./task_list');
         return;
       }
 
+      const $note = $notesList.find(`#note_${note.id}`);
       if (this.isNewNote(note)) {
         this.note_ids.push(note.id);
 
-        $notesList = window.$('ul.main-notes-list');
         Notes.animateAppendNote(note.html, $notesList);
 
         // Update datetime format on the recent note
-        gl.utils.localTimeAgo($notesList.find("#note_" + note.id + " .js-timeago"), false);
+        gl.utils.localTimeAgo($notesList.find(`#note_${note.id} .js-timeago`), false);
         this.collapseLongCommitList();
         this.taskList.init();
         this.refresh();
         return this.updateNotesCount(1);
+      }
+      else if (this.isUpdatedNote(note, $note)) {
+        const isEditing = $note.hasClass('is-editing');
+        const initialContent = $note.find('.original-note-content').text().trim();
+        const $textarea = $note.find('.js-note-text');
+        const currentContent = $textarea.val();
+        // There can be CRLF vs LF mismatches if we don't sanitize and compare the same way
+        const sanitizedNoteNote = $(`<textarea>${note.note}</textarea>`).val();
+        const isTextareaUntouched = currentContent === initialContent || currentContent === sanitizedNoteNote;
+
+        if (isEditing && isTextareaUntouched) {
+          $textarea.val(note.note);
+          this.pendingLatestNoteMap[note.id] = note;
+        }
+        else if (isEditing) {
+          this.putConflictEditWarningInPlace(note, $note);
+          this.pendingLatestNoteMap[note.id] = note;
+        }
+        else {
+          Notes.animateUpdateNote(note.html, $note);
+        }
       }
     };
 
@@ -327,6 +352,13 @@ require('./task_list');
 
     Notes.prototype.isNewNote = function(note) {
       return $.inArray(note.id, this.note_ids) === -1;
+    };
+
+    Notes.prototype.isUpdatedNote = function(note, $note) {
+      // There can be CRLF vs LF mismatches if we don't sanitize and compare the same way
+      const sanitizedNoteNote = $(`<textarea>${note.note}</textarea>`).val();
+      const currentNoteText = $note.find('.original-note-content').text().trim();
+      return sanitizedNoteNote !== currentNoteText;
     };
 
     Notes.prototype.isParallelView = function() {
@@ -350,7 +382,7 @@ require('./task_list');
       lineType = this.isParallelView() ? form.find('#line_type').val() : 'old';
       diffAvatarContainer = row.prevAll('.line_holder').first().find('.js-avatar-container.' + lineType + '_line');
       // is this the first note of discussion?
-      discussionContainer = window.$(`.notes[data-discussion-id="${note.discussion_id}"]`);
+      discussionContainer = $(`.notes[data-discussion-id="${note.discussion_id}"]`);
       if (!discussionContainer.length) {
         discussionContainer = form.closest('.discussion').find('.notes');
       }
@@ -373,8 +405,9 @@ require('./task_list');
           }
         }
         // Init discussion on 'Discussion' page if it is merge request page
-        if (window.$('body').attr('data-page').indexOf('projects:merge_request') === 0 || !note.diff_discussion_html) {
-          Notes.animateAppendNote(note.discussion_html, window.$('ul.main-notes-list'));
+        const page = $('body').attr('data-page');
+        if ((page && page.indexOf('projects:merge_request') === 0) || !note.diff_discussion_html) {
+          Notes.animateAppendNote(note.discussion_html, $('.main-notes-list'));
         }
       } else {
         // append new note to all matching discussions
@@ -570,7 +603,7 @@ require('./task_list');
 
     Notes.prototype.checkContentToAllowEditing = function($el) {
       var initialContent = $el.find('.original-note-content').text().trim();
-      var currentContent = $el.find('.note-textarea').val();
+      var currentContent = $el.find('.js-note-text').val();
       var isAllowed = true;
 
       if (currentContent === initialContent) {
@@ -584,7 +617,7 @@ require('./task_list');
           gl.utils.scrollToElement($el);
         }
 
-        $el.find('.js-edit-warning').show();
+        $el.find('.js-finish-edit-warning').show();
         isAllowed = false;
       }
 
@@ -603,7 +636,7 @@ require('./task_list');
       var $target = $(e.target);
       var $editForm = $(this.getEditFormSelector($target));
       var $note = $target.closest('.note');
-      var $currentlyEditing = $('.note.is-editting:visible');
+      var $currentlyEditing = $('.note.is-editing:visible');
 
       if ($currentlyEditing.length) {
         var isEditAllowed = this.checkContentToAllowEditing($currentlyEditing);
@@ -615,7 +648,7 @@ require('./task_list');
 
       $note.find('.js-note-attachment-delete').show();
       $editForm.addClass('current-note-edit-form');
-      $note.addClass('is-editting');
+      $note.addClass('is-editing');
       this.putEditFormInPlace($target);
     };
 
@@ -627,21 +660,30 @@ require('./task_list');
 
     Notes.prototype.cancelEdit = function(e) {
       e.preventDefault();
-      var $target = $(e.target);
-      var note = $target.closest('.note');
-      note.find('.js-edit-warning').hide();
+      const $target = $(e.target);
+      const $note = $target.closest('.note');
+      const noteId = $note.attr('data-note-id');
+
       this.revertNoteEditForm($target);
-      return this.removeNoteEditForm(note);
+
+      if (this.pendingLatestNoteMap[noteId]) {
+        $note.replaceWith(this.pendingLatestNoteMap[noteId].html);
+        this.pendingLatestNoteMap[noteId] = null;
+      }
+      else {
+        $note.find('.js-finish-edit-warning').hide();
+        this.removeNoteEditForm($note);
+      }
     };
 
     Notes.prototype.revertNoteEditForm = function($target) {
-      $target = $target || $('.note.is-editting:visible');
+      $target = $target || $('.note.is-editing:visible');
       var selector = this.getEditFormSelector($target);
       var $editForm = $(selector);
 
       $editForm.insertBefore('.notes-form');
       $editForm.find('.js-comment-button').enable();
-      $editForm.find('.js-edit-warning').hide();
+      $editForm.find('.js-finish-edit-warning').hide();
     };
 
     Notes.prototype.getEditFormSelector = function($el) {
@@ -656,9 +698,9 @@ require('./task_list');
 
     Notes.prototype.removeNoteEditForm = function(note) {
       var form = note.find('.current-note-edit-form');
-      note.removeClass('is-editting');
+      note.removeClass('is-editing');
       form.removeClass('current-note-edit-form');
-      form.find('.js-edit-warning').hide();
+      form.find('.js-finish-edit-warning').hide();
       // Replace markdown textarea text with original note text.
       return form.find('.js-note-text').val(form.find('form.edit-note').data('original-note'));
     };
@@ -1004,6 +1046,21 @@ require('./task_list');
       $editForm.find('.referenced-users').hide();
     };
 
+    Notes.prototype.putConflictEditWarningInPlace = function(note, $note) {
+      if ($note.find('.js-conflict-edit-warning').length === 0) {
+        const $alert = $(`<div class="js-conflict-edit-warning alert alert-danger">
+          Someone edited the comment the same time you did.
+          Please check out the
+          <a href="#note_${note.id}" target="_blank" rel="noopener noreferrer">
+            comment
+          </a>
+          and make sure your changes
+          will not unintentionally remove theirs
+        </div>`);
+        $alert.insertAfter($note.find('.note-text'));
+      }
+    };
+
     Notes.prototype.updateNotesCount = function(updateCount) {
       return this.notesCountBadge.text(parseInt(this.notesCountBadge.text(), 10) + updateCount);
     };
@@ -1064,11 +1121,20 @@ require('./task_list');
       return $form;
     };
 
-    Notes.animateAppendNote = function(noteHTML, $notesList) {
-      const $note = window.$(noteHTML);
+    Notes.animateAppendNote = function(noteHtml, $notesList) {
+      const $note = $(noteHtml);
 
       $note.addClass('fade-in').renderGFM();
       $notesList.append($note);
+      return $note;
+    };
+
+    Notes.animateUpdateNote = function(noteHtml, $note) {
+      const $updatedNote = $(noteHtml);
+
+      $updatedNote.addClass('fade-in').renderGFM();
+      $note.replaceWith($updatedNote);
+      return $updatedNote;
     };
 
     return Notes;

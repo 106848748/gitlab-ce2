@@ -62,6 +62,8 @@ describe "GitLab Flavored Markdown", feature: true do
                       project: project,
                       title: "fix #{@other_issue.to_reference}",
                       description: "ask #{fred.to_reference} for details")
+
+      @note = create(:note_on_issue, noteable: @issue, project: @issue.project, note: "Hello world")
     end
 
     it "renders subject in issues#index" do
@@ -88,6 +90,14 @@ describe "GitLab Flavored Markdown", feature: true do
 
       wait_for_vue_resource
       expect(page).to have_text("fix #{@other_issue.to_reference} and update")
+    end
+
+    it "renders updated note once edited somewhere else in issues#show" do
+      visit namespace_project_issue_path(project.namespace, project, @issue)
+      updated_text = "updated Hello World"
+      @note.update(note: updated_text)
+
+      expect(page).to have_text(updated_text)
     end
   end
 
