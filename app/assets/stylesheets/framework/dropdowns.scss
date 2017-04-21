@@ -615,17 +615,23 @@
   pointer-events: none;
 }
 
+.pika-single.animate-picker.is-bound,
+.pika-single.animate-picker.is-bound.is-hidden {
+  /*
+   * Having `!important` is not recommended but
+   * since `pikaday` sets positioning inline
+   * there's no way it can be gracefully overridden
+   * using config options.
+   */
+  position: absolute !important;
+  display: block;
+}
+
 .pika-single.animate-picker.is-bound {
   @include set-visible;
+}
 
-  &,
-  &.is-hidden {
-    position: absolute !important;
-    display: block;
-  }
-
-  &.is-hidden {
-    overflow: hidden;
-    @include set-invisible;
-  }
+.pika-single.animate-picker.is-bound.is-hidden {
+  @include set-invisible;
+  overflow: hidden;
 }
