@@ -15,10 +15,14 @@ module Gitlab
           request = Gitaly::CommitDiffRequest.new(
             repository: gitaly_repo,
             left_commit_id: parent_id,
-            right_commit_id: commit.id
+            right_commit_id: commit.id,
+            ignore_whitespace_change: !!options[:ignore_whitespace_change],
+            deltas_only: !!options[:deltas_only],
+            paths: (options[:paths] || []),
           )
 
-          Gitlab::Git::DiffCollection.new(stub.commit_diff(request), options)
+          iterator = GitalyClient::DiffIterator.new(stub.commit_diff(request))
+          Gitlab::Git::DiffCollection.new(iterator, options)
         end
 
         def is_ancestor(repository, ancestor_id, child_id)

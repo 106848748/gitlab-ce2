@@ -326,13 +326,11 @@ class Commit
   end
 
   def raw_diffs(*args)
-    # NOTE: This feature is intentionally disabled until
-    # https://gitlab.com/gitlab-org/gitaly/issues/178 is resolved
-    # if Gitlab::GitalyClient.feature_enabled?(:commit_raw_diffs)
-    #   Gitlab::GitalyClient::Commit.diff_from_parent(self, *args)
-    # else
-    raw.diffs(*args)
-    # end
+    if Gitlab::GitalyClient.feature_enabled?(:commit_raw_diffs)
+      Gitlab::GitalyClient::Commit.diff_from_parent(self, *args)
+    else
+      raw.diffs(*args)
+    end
   end
 
   def diffs(diff_options = nil)

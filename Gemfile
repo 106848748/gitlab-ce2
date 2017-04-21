@@ -358,6 +358,6 @@ gem 'vmstat', '~> 2.3.0'
 gem 'sys-filesystem', '~> 1.1.6'
 
 # Gitaly GRPC client
-gem 'gitaly', '~> 0.5.0'
+gem 'gitaly', git: 'https://gitlab.com/gitlab-org/gitaly-proto.git', ref: 'feature/commit-diff-flags'
 
 gem 'toml-rb', '~> 0.3.15', require: false
