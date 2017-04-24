@@ -1417,21 +1417,6 @@ describe User, models: true do
     end
   end
 
-  describe '#nested_groups' do
-    let!(:user) { create(:user) }
-    let!(:group) { create(:group) }
-    let!(:nested_group) { create(:group, parent: group) }
-
-    before do
-      group.add_owner(user)
-
-      # Add more data to ensure method does not include wrong groups
-      create(:group).add_owner(create(:user))
-    end
-
-    it { expect(user.nested_groups).to eq([nested_group]) }
-  end
-
   describe '#all_expanded_groups' do
     let!(:user) { create(:user) }
     let!(:group) { create(:group) }
@@ -1441,24 +1426,6 @@ describe User, models: true do
     before { nested_group_1.add_owner(user) }
 
     it { expect(user.all_expanded_groups).to match_array [group, nested_group_1] }
-  end
-
-  describe '#nested_groups_projects' do
-    let!(:user) { create(:user) }
-    let!(:group) { create(:group) }
-    let!(:nested_group) { create(:group, parent: group) }
-    let!(:project) { create(:empty_project, namespace: group) }
-    let!(:nested_project) { create(:empty_project, namespace: nested_group) }
-
-    before do
-      group.add_owner(user)
-
-      # Add more data to ensure method does not include wrong projects
-      other_project = create(:empty_project, namespace: create(:group, :nested))
-      other_project.add_developer(create(:user))
-    end
-
-    it { expect(user.nested_groups_projects).to eq([nested_project]) }
   end
 
   describe '#refresh_authorized_projects', redis: true do

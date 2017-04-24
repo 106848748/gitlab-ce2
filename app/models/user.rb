@@ -478,21 +478,16 @@ class User < ActiveRecord::Base
     Group.where("namespaces.id IN (#{union.to_sql})")
   end
 
-  def nested_groups
-    Group.member_descendants(id)
-  end
-
+  # Returns a relation of groups the user has access to, including their parent
+  # and child groups (recursively).
   def all_expanded_groups
-    Group.member_hierarchy(id)
+    return groups unless Group.supports_nested_groups?
+
+    Gitlab::GroupHierarchy.new(groups).all_groups
   end
 
   def expanded_groups_requiring_two_factor_authentication
     all_expanded_groups.where(require_two_factor_authentication: true)
-  end
-
-  def nested_groups_projects
-    Project.joins(:namespace).where('namespaces.parent_id IS NOT NULL').
-      member_descendants(id)
   end
 
   def refresh_authorized_projects
