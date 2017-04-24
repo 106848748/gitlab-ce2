@@ -1,9 +1,5 @@
 module MarkdownActions
-  extend ActiveSupport::Concern
-
-  def preview_markdown
-    text = params[:text]
-
+  def render_markdown_preview(text, markdown_context = {})
     render json: {
       body: view_context.markdown(text, markdown_context),
       references: {
@@ -13,10 +9,6 @@ module MarkdownActions
   end
 
   private
-
-  def markdown_context
-    {}
-  end
 
   def preview_referenced_users(text)
     extractor = Gitlab::ReferenceExtractor.new(@project, current_user)

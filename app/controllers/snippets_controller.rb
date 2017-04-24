@@ -81,11 +81,11 @@ class SnippetsController < ApplicationController
     )
   end
 
-  protected
-
-  def review_context
-    { skip_project_check: true }
+  def preview_markdown
+    render_markdown_preview(params[:text], skip_project_check: true)
   end
+
+  protected
 
   def snippet
     @snippet ||= if current_user

@@ -217,6 +217,10 @@ class ProjectsController < Projects::ApplicationController
     }
   end
 
+  def preview_markdown
+    render_markdown_preview(params[:text])
+  end
+
   def refs
     branches = BranchesFinder.new(@repository, params).execute.map(&:name)
 

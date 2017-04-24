@@ -96,6 +96,10 @@ class Projects::WikisController < Projects::ApplicationController
   def git_access
   end
 
+  def preview_markdown
+    render_markdown_preview(params[:text], markdown_context)
+  end
+
   private
 
   def markdown_context
