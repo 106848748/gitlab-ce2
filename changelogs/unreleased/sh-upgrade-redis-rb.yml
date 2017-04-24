@@ -1,0 +1,4 @@
+---
+title: Upgrade redis-rb to remove the use of Timeout.timeout
+merge_request:
+author:

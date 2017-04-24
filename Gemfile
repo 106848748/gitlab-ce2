@@ -167,7 +167,7 @@ gem 'version_sorter', '~> 2.1.0'
 gem 'redis-rails', '~> 5.0.1'
 
 # Redis
-gem 'redis', '~> 3.2'
+gem 'redis', '~> 3.3'
 gem 'connection_pool', '~> 2.0'
 
 # HipChat integration
