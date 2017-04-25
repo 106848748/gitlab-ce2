@@ -1097,6 +1097,7 @@ require('./task_list');
       $noteBody.find('.md.note-text').html(formContent); // If we ever preview it, use preview instead!
       $noteBody.find('.original-note-content').text(formContent);
       $noteBody.find('.js-task-list-field').text(formContent);
+      $tempNote.addClass('fade-in');
 
       return $tempNote;
     };
@@ -1151,6 +1152,7 @@ require('./task_list');
       $editingNote.removeClass('is-editting');
       $editingNote.addClass('being-posted');
       $editingNote.find('.note-headline-meta a').html('<i class="fa fa-spinner fa-spin"></i>');
+      $editingNote.addClass('fade-in');
 
       $.ajax({
         type: 'POST',
