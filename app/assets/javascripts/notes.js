@@ -47,7 +47,7 @@ require('./task_list');
       this.notes_url = notes_url;
       this.note_ids = note_ids;
       // Used to keep track of updated notes while people are editing things
-      this.pendingLatestNoteMap = {};
+      this.updatedNotesTrackingMap = {};
       this.last_fetched_at = last_fetched_at;
       this.noteable_url = document.URL;
       this.notesCountBadge || (this.notesCountBadge = $(".issuable-details").find(".notes-tab .badge"));
@@ -323,6 +323,7 @@ require('./task_list');
         this.refresh();
         return this.updateNotesCount(1);
       }
+      // The server can send the same update multiple times so we need to make sure to only update once per actual update.
       else if (this.isUpdatedNote(note, $note)) {
         const isEditing = $note.hasClass('is-editing');
         const initialContent = $note.find('.original-note-content').text().trim();
@@ -334,11 +335,11 @@ require('./task_list');
 
         if (isEditing && isTextareaUntouched) {
           $textarea.val(note.note);
-          this.pendingLatestNoteMap[note.id] = note;
+          this.updatedNotesTrackingMap[note.id] = note;
         }
         else if (isEditing) {
           this.putConflictEditWarningInPlace(note, $note);
-          this.pendingLatestNoteMap[note.id] = note;
+          this.updatedNotesTrackingMap[note.id] = note;
         }
         else {
           Notes.animateUpdateNote(note.html, $note);
@@ -406,7 +407,7 @@ require('./task_list');
         }
         // Init discussion on 'Discussion' page if it is merge request page
         const page = $('body').attr('data-page');
-        if ((page && page.indexOf('projects:merge_request') === 0) || !note.diff_discussion_html) {
+        if (page === 'projects:merge_request' || !note.diff_discussion_html) {
           Notes.animateAppendNote(note.discussion_html, $('.main-notes-list'));
         }
       } else {
@@ -666,9 +667,9 @@ require('./task_list');
 
       this.revertNoteEditForm($target);
 
-      if (this.pendingLatestNoteMap[noteId]) {
-        $note.replaceWith(this.pendingLatestNoteMap[noteId].html);
-        this.pendingLatestNoteMap[noteId] = null;
+      if (this.updatedNotesTrackingMap[noteId]) {
+        $note.replaceWith(this.updatedNotesTrackingMap[noteId].html);
+        this.updatedNotesTrackingMap[noteId] = null;
       }
       else {
         $note.find('.js-finish-edit-warning').hide();

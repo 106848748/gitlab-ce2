@@ -39,6 +39,7 @@ feature 'Issue notes polling', :feature, :js do
 
     it 'when editing but have not changed anything, and an update comes in, show the updated content in the textarea' do
       find("#note_#{existing_note.id} .js-note-edit").click
+
       expect(page).to have_field("note[note]", with: note_text)
 
       updated_text = "Bye World"
@@ -50,7 +51,9 @@ feature 'Issue notes polling', :feature, :js do
 
     it 'when editing but you changed some things, and an update comes in, show a warning' do
       find("#note_#{existing_note.id} .js-note-edit").click
+
       expect(page).to have_field("note[note]", with: note_text)
+
       find("#note_#{existing_note.id} .js-note-text").set('something random')
 
       updated_text = "Bye World"
@@ -62,7 +65,9 @@ feature 'Issue notes polling', :feature, :js do
 
     it 'when editing but you changed some things, an update comes in, and you press cancel, show the updated content' do
       find("#note_#{existing_note.id} .js-note-edit").click
+
       expect(page).to have_field("note[note]", with: note_text)
+
       find("#note_#{existing_note.id} .js-note-text").set('something random')
 
       updated_text = "Bye World"
