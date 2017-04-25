@@ -272,20 +272,20 @@ require('./task_list');
       return this.initRefresh();
     };
 
-    Notes.prototype.handleCreateChanges = function(note) {
+    Notes.prototype.handleCreateChanges = function(noteEntity) {
       var votesBlock;
-      if (typeof note === 'undefined') {
+      if (typeof noteEntity === 'undefined') {
         return;
       }
 
-      if (note.commands_changes) {
-        if ('merge' in note.commands_changes) {
+      if (noteEntity.commands_changes) {
+        if ('merge' in noteEntity.commands_changes) {
           $.get(mrRefreshWidgetUrl);
         }
 
-        if ('emoji_award' in note.commands_changes) {
+        if ('emoji_award' in noteEntity.commands_changes) {
           votesBlock = $('.js-awards-block').eq(0);
-          gl.awardsHandler.addAwardToEmojiBar(votesBlock, note.commands_changes.emoji_award);
+          gl.awardsHandler.addAwardToEmojiBar(votesBlock, noteEntity.commands_changes.emoji_award);
           return gl.awardsHandler.scrollToAwards();
         }
       }
@@ -297,52 +297,52 @@ require('./task_list');
     Note: for rendering inline notes use renderDiscussionNote
      */
 
-    Notes.prototype.renderNote = function(note, $form, $notesList = $('.main-notes-list')) {
-      if (note.discussion_html != null) {
-        return this.renderDiscussionNote(note, $form);
+    Notes.prototype.renderNote = function(noteEntity, $form, $notesList = $('.main-notes-list')) {
+      if (noteEntity.discussion_html != null) {
+        return this.renderDiscussionNote(noteEntity, $form);
       }
 
-      if (!note.valid) {
-        if (note.errors.commands_only) {
-          new Flash(note.errors.commands_only, 'notice', this.parentTimeline);
+      if (!noteEntity.valid) {
+        if (noteEntity.errors.commands_only) {
+          new Flash(noteEntity.errors.commands_only, 'notice', this.parentTimeline);
           this.refresh();
         }
         return;
       }
 
-      const $note = $notesList.find(`#note_${note.id}`);
-      if (this.isNewNote(note)) {
-        this.note_ids.push(note.id);
+      const $note = $notesList.find(`#note_${noteEntity.id}`);
+      if (this.isNewNote(noteEntity)) {
+        this.note_ids.push(noteEntity.id);
 
-        Notes.animateAppendNote(note.html, $notesList);
+        Notes.animateAppendNote(noteEntity.html, $notesList);
 
         // Update datetime format on the recent note
-        gl.utils.localTimeAgo($notesList.find(`#note_${note.id} .js-timeago`), false);
+        gl.utils.localTimeAgo($notesList.find(`#note_${noteEntity.id} .js-timeago`), false);
         this.collapseLongCommitList();
         this.taskList.init();
         this.refresh();
         return this.updateNotesCount(1);
       }
       // The server can send the same update multiple times so we need to make sure to only update once per actual update.
-      else if (this.isUpdatedNote(note, $note)) {
+      else if (this.isUpdatedNote(noteEntity, $note)) {
         const isEditing = $note.hasClass('is-editing');
         const initialContent = $note.find('.original-note-content').text().trim();
         const $textarea = $note.find('.js-note-text');
         const currentContent = $textarea.val();
         // There can be CRLF vs LF mismatches if we don't sanitize and compare the same way
-        const sanitizedNoteNote = $(`<textarea>${note.note}</textarea>`).val();
+        const sanitizedNoteNote = $(`<textarea>${noteEntity.note}</textarea>`).val();
         const isTextareaUntouched = currentContent === initialContent || currentContent === sanitizedNoteNote;
 
         if (isEditing && isTextareaUntouched) {
-          $textarea.val(note.note);
-          this.updatedNotesTrackingMap[note.id] = note;
+          $textarea.val(noteEntity.note);
+          this.updatedNotesTrackingMap[noteEntity.id] = noteEntity;
         }
         else if (isEditing) {
-          this.putConflictEditWarningInPlace(note, $note);
-          this.updatedNotesTrackingMap[note.id] = note;
+          this.putConflictEditWarningInPlace(noteEntity, $note);
+          this.updatedNotesTrackingMap[noteEntity.id] = noteEntity;
         }
         else {
-          Notes.animateUpdateNote(note.html, $note);
+          Notes.animateUpdateNote(noteEntity.html, $note);
         }
       }
     };
@@ -351,13 +351,13 @@ require('./task_list');
     Check if note does not exists on page
      */
 
-    Notes.prototype.isNewNote = function(note) {
-      return $.inArray(note.id, this.note_ids) === -1;
+    Notes.prototype.isNewNote = function(noteEntity) {
+      return $.inArray(noteEntity.id, this.note_ids) === -1;
     };
 
-    Notes.prototype.isUpdatedNote = function(note, $note) {
+    Notes.prototype.isUpdatedNote = function(noteEntity, $note) {
       // There can be CRLF vs LF mismatches if we don't sanitize and compare the same way
-      const sanitizedNoteNote = $(`<textarea>${note.note}</textarea>`).val();
+      const sanitizedNoteNote = $(`<textarea>${noteEntity.note}</textarea>`).val();
       const currentNoteText = $note.find('.original-note-content').text().trim();
       return sanitizedNoteNote !== currentNoteText;
     };
@@ -372,31 +372,31 @@ require('./task_list');
     Note: for rendering inline notes use renderDiscussionNote
      */
 
-    Notes.prototype.renderDiscussionNote = function(note, $form) {
+    Notes.prototype.renderDiscussionNote = function(noteEntity, $form) {
       var discussionContainer, form, row, lineType, diffAvatarContainer;
-      if (!this.isNewNote(note)) {
+      if (!this.isNewNote(noteEntity)) {
         return;
       }
-      this.note_ids.push(note.id);
-      form = $form || $(".js-discussion-note-form[data-discussion-id='" + note.discussion_id + "']");
+      this.note_ids.push(noteEntity.id);
+      form = $form || $(".js-discussion-note-form[data-discussion-id='" + noteEntity.discussion_id + "']");
       row = form.closest("tr");
       lineType = this.isParallelView() ? form.find('#line_type').val() : 'old';
       diffAvatarContainer = row.prevAll('.line_holder').first().find('.js-avatar-container.' + lineType + '_line');
       // is this the first note of discussion?
-      discussionContainer = $(`.notes[data-discussion-id="${note.discussion_id}"]`);
+      discussionContainer = $(`.notes[data-discussion-id="${noteEntity.discussion_id}"]`);
       if (!discussionContainer.length) {
         discussionContainer = form.closest('.discussion').find('.notes');
       }
       if (discussionContainer.length === 0) {
-        if (note.diff_discussion_html) {
-          var $discussion = $(note.diff_discussion_html).renderGFM();
+        if (noteEntity.diff_discussion_html) {
+          var $discussion = $(noteEntity.diff_discussion_html).renderGFM();
 
           if (!this.isParallelView() || row.hasClass('js-temp-notes-holder')) {
             // insert the note and the reply button after the temp row
             row.after($discussion);
           } else {
             // Merge new discussion HTML in
-            var $notes = $discussion.find('.notes[data-discussion-id="' + note.discussion_id + '"]');
+            var $notes = $discussion.find('.notes[data-discussion-id="' + noteEntity.discussion_id + '"]');
             var contentContainerClass = '.' + $notes.closest('.notes_content')
               .attr('class')
               .split(' ')
@@ -407,17 +407,17 @@ require('./task_list');
         }
         // Init discussion on 'Discussion' page if it is merge request page
         const page = $('body').attr('data-page');
-        if (page === 'projects:merge_request' || !note.diff_discussion_html) {
-          Notes.animateAppendNote(note.discussion_html, $('.main-notes-list'));
+        if (page === 'projects:merge_request' || !noteEntity.diff_discussion_html) {
+          Notes.animateAppendNote(noteEntity.discussion_html, $('.main-notes-list'));
         }
       } else {
         // append new note to all matching discussions
-        Notes.animateAppendNote(note.html, discussionContainer);
+        Notes.animateAppendNote(noteEntity.html, discussionContainer);
       }
 
-      if (typeof gl.diffNotesCompileComponents !== 'undefined' && note.discussion_resolvable) {
+      if (typeof gl.diffNotesCompileComponents !== 'undefined' && noteEntity.discussion_resolvable) {
         gl.diffNotesCompileComponents();
-        this.renderDiscussionAvatar(diffAvatarContainer, note);
+        this.renderDiscussionAvatar(diffAvatarContainer, noteEntity);
       }
 
       gl.utils.localTimeAgo($('.js-timeago'), false);
@@ -431,13 +431,13 @@ require('./task_list');
         .get(0);
     };
 
-    Notes.prototype.renderDiscussionAvatar = function(diffAvatarContainer, note) {
+    Notes.prototype.renderDiscussionAvatar = function(diffAvatarContainer, noteEntity) {
       var commentButton = diffAvatarContainer.find('.js-add-diff-note-button');
       var avatarHolder = diffAvatarContainer.find('.diff-comment-avatar-holders');
 
       if (!avatarHolder.length) {
         avatarHolder = document.createElement('diff-note-avatars');
-        avatarHolder.setAttribute('discussion-id', note.discussion_id);
+        avatarHolder.setAttribute('discussion-id', noteEntity.discussion_id);
 
         diffAvatarContainer.append(avatarHolder);
 
@@ -584,16 +584,16 @@ require('./task_list');
     Updates the current note field.
      */
 
-    Notes.prototype.updateNote = function(_xhr, note, _status) {
+    Notes.prototype.updateNote = function(_xhr, noteEntity, _status) {
       var $html, $note_li;
       // Convert returned HTML to a jQuery object so we can modify it further
-      $html = $(note.html);
+      $html = $(noteEntity.html);
       this.revertNoteEditForm();
       gl.utils.localTimeAgo($('.js-timeago', $html));
       $html.renderGFM();
       $html.find('.js-task-list-container').taskList('enable');
       // Find the note's `li` element by ID and replace it with the updated HTML
-      $note_li = $('.note-row-' + note.id);
+      $note_li = $('.note-row-' + noteEntity.id);
 
       $note_li.replaceWith($html);
 
@@ -697,9 +697,9 @@ require('./task_list');
       return selector;
     };
 
-    Notes.prototype.removeNoteEditForm = function(note) {
-      var form = note.find('.current-note-edit-form');
-      note.removeClass('is-editing');
+    Notes.prototype.removeNoteEditForm = function(noteEntity) {
+      var form = noteEntity.find('.current-note-edit-form');
+      noteEntity.removeClass('is-editing');
       form.removeClass('current-note-edit-form');
       form.find('.js-finish-edit-warning').hide();
       // Replace markdown textarea text with original note text.
@@ -726,9 +726,9 @@ require('./task_list');
         // to remove all. Using $(".note[id='noteId']") ensure we get all the notes,
         // where $("#noteId") would return only one.
         return function(i, el) {
-          var note, notes;
-          note = $(el);
-          notes = note.closest(".discussion-notes");
+          var $note, $notes;
+          $note = $(el);
+          $notes = $note.closest(".discussion-notes");
 
           if (typeof gl.diffNotesCompileComponents !== 'undefined') {
             if (gl.diffNoteApps[noteElId]) {
@@ -736,18 +736,18 @@ require('./task_list');
             }
           }
 
-          note.remove();
+          $note.remove();
 
           // check if this is the last note for this line
-          if (notes.find(".note").length === 0) {
-            var notesTr = notes.closest("tr");
+          if ($notes.find(".note").length === 0) {
+            var notesTr = $notes.closest("tr");
 
             // "Discussions" tab
-            notes.closest(".timeline-entry").remove();
+            $notes.closest(".timeline-entry").remove();
 
             // The notes tr can contain multiple lists of notes, like on the parallel diff
             if (notesTr.find('.discussion-notes').length > 1) {
-              notes.remove();
+              $notes.remove();
             } else {
               notesTr.remove();
             }
@@ -766,12 +766,11 @@ require('./task_list');
      */
 
     Notes.prototype.removeAttachment = function() {
-      var note;
-      note = $(this).closest(".note");
-      note.find(".note-attachment").remove();
-      note.find(".note-body > .note-text").show();
-      note.find(".note-header").show();
-      return note.find(".current-note-edit-form").remove();
+      const $note = $(this).closest(".note");
+      $note.find(".note-attachment").remove();
+      $note.find(".note-body > .note-text").show();
+      $note.find(".note-header").show();
+      return $note.find(".current-note-edit-form").remove();
     };
 
     /*
