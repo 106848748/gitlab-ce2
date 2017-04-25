@@ -100,7 +100,7 @@ import '~/notes';
         ]);
         notes.taskList = jasmine.createSpyObj('tasklist', ['init']);
         notes.note_ids = [];
-        notes.pendingLatestNoteMap = {};
+        notes.updatedNotesTrackingMap = {};
 
         spyOn(gl.utils, 'localTimeAgo');
         spyOn(Notes, 'animateAppendNote');

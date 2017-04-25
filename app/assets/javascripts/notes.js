@@ -407,7 +407,7 @@ require('./task_list');
         }
         // Init discussion on 'Discussion' page if it is merge request page
         const page = $('body').attr('data-page');
-        if (page === 'projects:merge_request' || !noteEntity.diff_discussion_html) {
+        if ((page && page.indexOf('projects:merge_request') === 0) || !noteEntity.diff_discussion_html) {
           Notes.animateAppendNote(noteEntity.discussion_html, $('.main-notes-list'));
         }
       } else {
