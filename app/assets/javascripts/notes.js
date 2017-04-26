@@ -26,7 +26,7 @@ require('./task_list');
 
     function Notes(notes_url, note_ids, last_fetched_at, view) {
       this.updateTargetButtons = bind(this.updateTargetButtons, this);
-      this.updateCloseButton = bind(this.updateCloseButton, this);
+      this.updateComment = bind(this.updateComment, this);
       this.visibilityChange = bind(this.visibilityChange, this);
       this.cancelDiscussionForm = bind(this.cancelDiscussionForm, this);
       this.addDiffNote = bind(this.addDiffNote, this);
@@ -85,9 +85,8 @@ require('./task_list');
       $(document).on("click", ".js-note-edit", this.showEditForm.bind(this));
       $(document).on("click", ".note-edit-cancel", this.cancelEdit);
       // Reopen and close actions for Issue/MR combined with note form submit
-      $(document).on("click", ".js-comment-button", this.updateCloseButton);
+      $(document).on("click", ".js-comment-button", this.updateComment);
       $(document).on("click", ".js-insta-comment-button", this.postComment);
-      $(document).on("click", ".js-insta-save-button", this.updateComment.bind(this));
       $(document).on("keyup input", ".js-note-text", this.updateTargetButtons);
       // resolve a discussion
       $(document).on('click', '.js-comment-resolve-button', this.resolveDiscussion);
@@ -929,14 +928,6 @@ require('./task_list');
       return this.refresh();
     };
 
-    Notes.prototype.updateCloseButton = function(e) {
-      var closebtn, form, textarea;
-      textarea = $(e.target);
-      form = textarea.parents('form');
-      closebtn = form.find('.js-note-target-close');
-      return closebtn.text(closebtn.data('original-text'));
-    };
-
     Notes.prototype.updateTargetButtons = function(e) {
       var closebtn, closetext, discardbtn, form, reopenbtn, reopentext, textarea;
       textarea = $(e.target);
@@ -1075,6 +1066,17 @@ require('./task_list');
       $notesList.append($note);
     };
 
+    Notes.prototype.getFormData = function(target) {
+      const $form = $(target).parents('form');
+
+      return {
+        $form,
+        formData: $form.serialize(),
+        formContent: $form.find('.js-note-text').val(),
+        formAction: $form.attr('action'),
+      };
+    };
+
     Notes.prototype.createPlaceholderNote = function($baseNote, formContent, uniqueId) {
       const $tempNote = $baseNote.clone();
 
@@ -1105,9 +1107,7 @@ require('./task_list');
 
     Notes.prototype.postComment = function(e) {
       const self = this;
-      const $form = $(e.target).parents('form');
-      const formData = $form.serialize();
-      const formContent = $form.find('.js-note-text').val();
+      const { $form, formData, formContent, formAction } = self.getFormData(e.target);
       // const formContentMD = $form.find('.js-md-preview').html();
       const uniqueId = Date.now();
       let $notesContainer;
@@ -1126,7 +1126,7 @@ require('./task_list');
 
       $.ajax({
         type: 'POST',
-        url: $form.attr('action'),
+        url: formAction,
         data: formData,
         success(note) {
           $notesContainer.find(`#${uniqueId}`).remove();
@@ -1141,10 +1141,10 @@ require('./task_list');
     };
 
     Notes.prototype.updateComment = function(e) {
+      e.preventDefault();
       const self = this;
-      const $form = $(e.target).parents('form');
-      const formData = $form.serialize();
-      const formContent = $form.find('.js-note-text').val();
+      const { $form, formData, formContent, formAction } = self.getFormData(e.target);
+      const $closeBtn = $form.find('.js-note-target-close');
       const $editingNote = $form.parents('.note.is-editting');
       const $noteBody = $editingNote.find('.js-task-list-container');
 
@@ -1159,12 +1159,14 @@ require('./task_list');
 
       $.ajax({
         type: 'POST',
-        url: $form.attr('action'),
+        url: formAction,
         data: formData,
         success(note) {
           self.updateNote(null, note, null);
         }
       });
+
+      return $closeBtn.text($closeBtn.data('original-text'));
     };
 
     return Notes;
