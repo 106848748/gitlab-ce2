@@ -8,43 +8,55 @@
     },
 
     computed: {
-      renderDropdown() {
-        return this.job.size > 1;
-      },
-
-      renderAction() {
-        return this.job.size === 1;
-      },
-
-      badgeId() {
-        return `ci-badge-${this.job.name}`;
-      },
-
       tooltipText() {
         return `${this.job.name} - ${this.job.status.label}`;
-      },
-
-      iconContainerClass() {
-        const { group } = this.job.status;
-        return `ci-status-icon ci-status-icon-${group} js-ci-status-icon-${group}`;
       },
 
       statusIcon() {
         // return SVG
       },
 
-      actionIconSvg() {
-        // return SVG
+      statusClass() {
+        return `ci-status-icon ci-status-icon-${this.job.status.name}`;
       },
+
     },
   };
-
-  // 1. normal badge
-  // 2. action icon
 </script>
 <template>
   <template>
+    <button
+      type="button"
+      data-toggle="dropdown"
+      data-container="body"
+      class="dropdown-menu-toggle build-content has-tooltip"
+      :title="tooltipText">
+
+      <span class="statusClass">
+        Icon goes here
+      </span>
+
+      <span class="ci-status-text">
+        {{job.name}}
+      </span>
+
+      <span class="dropdown-counter-badge">
+        {{job.size}}
+      </span>
+    </button>
+
+    <ul class="dropdown-menu big-pipeline-graph-dropdown-menu js-grouped-pipeline-dropdown">
+      <div class="arror"></div>
+      <div class="scrollable-menu">
+        <li v-for="item in job.list">
+
+        </li>
+      </div>
+    </ul>
+  </template>
+
     <!-- Status Icon -->
+
     <a
       v-if="job.details_path"
       :href="job.details_path"
@@ -77,6 +89,8 @@
       </div>
     </div>
 
+    <!-- Action or Dropdown -->
+
     <a
       v-if="job.action_path"
       :data-method="job.action_method"
@@ -90,5 +104,6 @@
         v-html="actionIconSvg"
       </i>
     </a>
-  </template>
+
+  </li>
 </template>

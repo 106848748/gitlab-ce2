@@ -22,14 +22,27 @@ export default {
 <template>
   <li class="stage-column">
     <div class="stage-name">
-      <a>{{title}}</a>
+      <a name="title">{{title}}</a>
     </div>
     <div class="builds-container">
       <ul>
-        <badge-component
+        <li
           v-for="job in jobs"
-          :job="job"
-          :key="job.id"/>
+          :key="job.id"
+          class="build"
+          id="badgeId">
+
+          <div class="curve"></div>
+
+          <badge-component
+            v-if="job.size === 1"
+            :job="job"/>
+
+          <dropwdown-badge-component
+            v-if="job.size > 1"
+            :job="job" />
+
+        </li>
       </ul>
     </div>
   </li>
