@@ -95,6 +95,7 @@ describe "GitLab Flavored Markdown", feature: true do
     it "renders updated note once edited somewhere else in issues#show" do
       visit namespace_project_issue_path(project.namespace, project, @issue)
       updated_text = "updated Hello World"
+
       @note.update(note: updated_text)
 
       expect(page).to have_text(updated_text)

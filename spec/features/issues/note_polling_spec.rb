@@ -4,7 +4,7 @@ feature 'Issue notes polling', :feature, :js do
   let(:project) { create(:empty_project, :public) }
   let(:issue) { create(:issue, project: project) }
 
-  describe 'updates' do
+  describe 'creates' do
     before do
       visit namespace_project_issue_path(project.namespace, project, issue)
     end
@@ -20,6 +20,7 @@ feature 'Issue notes polling', :feature, :js do
   describe 'updates' do
     let(:user) { create(:user) }
     let(:note_text) { "Hello World" }
+    let(:updated_text) { "Bye World" }
     let!(:existing_note) { create(:note, noteable: issue, project: project, author: user, note: note_text) }
 
     before do
@@ -30,9 +31,7 @@ feature 'Issue notes polling', :feature, :js do
     it 'should display the updated content' do
       expect(page).to have_selector("#note_#{existing_note.id}", text: note_text)
 
-      updated_text = "Bye World"
-      existing_note.update(note: updated_text)
-      page.execute_script('notes.refresh();')
+      update_note(existing_note, updated_text)
 
       expect(page).to have_selector("#note_#{existing_note.id}", text: updated_text)
     end
@@ -42,9 +41,7 @@ feature 'Issue notes polling', :feature, :js do
 
       expect(page).to have_field("note[note]", with: note_text)
 
-      updated_text = "Bye World"
-      existing_note.update(note: updated_text)
-      page.execute_script('notes.refresh();')
+      update_note(existing_note, updated_text)
 
       expect(page).to have_field("note[note]", with: updated_text)
     end
@@ -56,9 +53,7 @@ feature 'Issue notes polling', :feature, :js do
 
       find("#note_#{existing_note.id} .js-note-text").set('something random')
 
-      updated_text = "Bye World"
-      existing_note.update(note: updated_text)
-      page.execute_script('notes.refresh();')
+      update_note(existing_note, updated_text)
 
       expect(page).to have_selector(".alert")
     end
@@ -70,13 +65,16 @@ feature 'Issue notes polling', :feature, :js do
 
       find("#note_#{existing_note.id} .js-note-text").set('something random')
 
-      updated_text = "Bye World"
-      existing_note.update(note: updated_text)
-      page.execute_script('notes.refresh();')
+      update_note(existing_note, updated_text)
 
       find("#note_#{existing_note.id} .note-edit-cancel").click
 
       expect(page).to have_selector("#note_#{existing_note.id}", text: updated_text)
     end
+  end
+
+  def update_note(note, new_text)
+    note.update(note: new_text)
+    page.execute_script('notes.refresh();')
   end
 end

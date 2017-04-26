@@ -1049,13 +1049,11 @@ require('./task_list');
     Notes.prototype.putConflictEditWarningInPlace = function(note, $note) {
       if ($note.find('.js-conflict-edit-warning').length === 0) {
         const $alert = $(`<div class="js-conflict-edit-warning alert alert-danger">
-          Someone edited the comment the same time you did.
-          Please check out the
+          This comment has changed since you started editing, please review the
           <a href="#note_${note.id}" target="_blank" rel="noopener noreferrer">
-            comment
+            updated comment
           </a>
-          and make sure your changes
-          will not unintentionally remove theirs
+          to ensure information is not lost
         </div>`);
         $alert.insertAfter($note.find('.note-text'));
       }
