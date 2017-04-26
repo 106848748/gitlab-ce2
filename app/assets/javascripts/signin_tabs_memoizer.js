@@ -37,11 +37,11 @@
     }
 
     saveData(val) {
-      localStorage.setItem(this.currentTabKey, val);
+      if (localStorage) localStorage.setItem(this.currentTabKey, val);
     }
 
     readData() {
-      return localStorage.getItem(this.currentTabKey);
+      return localStorage ? localStorage.getItem(this.currentTabKey) : null;
     }
   }
 
