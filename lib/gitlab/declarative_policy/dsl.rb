@@ -58,5 +58,9 @@ module DeclarativePolicy
 
       @context_class.__send__(m, *a, &b)
     end
+
+    def respond_to_missing?(m)
+      @context_class.respond_to?(m) || super
+    end
   end
 end
