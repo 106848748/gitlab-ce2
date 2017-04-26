@@ -43,7 +43,8 @@ module DeclarativePolicy
         else
           [self]
         end
-      else [self]
+      else
+        [self]
       end
     end
 
