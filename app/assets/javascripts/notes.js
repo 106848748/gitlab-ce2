@@ -557,6 +557,7 @@ require('./task_list');
       var $html, $note_li;
       // Convert returned HTML to a jQuery object so we can modify it further
       $html = $(note.html);
+      $html.addClass('fade-in-complete');
       this.revertNoteEditForm();
       gl.utils.localTimeAgo($('.js-timeago', $html));
       $html.renderGFM();
@@ -1130,7 +1131,9 @@ require('./task_list');
         success(note) {
           $notesContainer.find(`#${uniqueId}`).remove();
           self.note_ids.push(note.id);
-          $notesContainer.append(note.html).syntaxHighlight();
+          const $note = $(note.html);
+          $note.addClass('fade-in-complete');
+          $notesContainer.append($note).syntaxHighlight();
           gl.utils.localTimeAgo($notesContainer.find("#note_" + note.id + " .js-timeago"), false);
           self.updateNotesCount(1);
         }
