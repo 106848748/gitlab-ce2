@@ -1,3 +1,5 @@
+import { isPropertyAccessSafe } from '../../lib/utils/accessor';
+
 class RecentSearchesService {
   constructor(localStorageKey = 'issuable-recent-searches') {
     this.localStorageKey = localStorageKey;
@@ -5,7 +7,10 @@ class RecentSearchesService {
 
   fetch() {
     let input;
-    if (window.localStorage) input = window.localStorage.getItem(this.localStorageKey);
+
+    if (RecentSearchesService.isAvailable()) {
+      input = window.localStorage.getItem(this.localStorageKey);
+    }
 
     let searches = [];
     if (input && input.length > 0) {
@@ -20,13 +25,13 @@ class RecentSearchesService {
   }
 
   save(searches = []) {
-    if (!window.localStorage) return;
+    if (!RecentSearchesService.isAvailable()) return;
 
     window.localStorage.setItem(this.localStorageKey, JSON.stringify(searches));
   }
 
   static isAvailable() {
-    return !!window.localStorage;
+    return isPropertyAccessSafe(window, 'localStorage');
   }
 }
 

@@ -1,5 +1,7 @@
 /* eslint no-param-reassign: ["error", { "props": false }]*/
 /* eslint no-new: "off" */
+import { isPropertyAccessSafe } from './lib/utils/accessor';
+
 ((global) => {
   /**
    * Memorize the last selected tab after reloading a page.
@@ -9,6 +11,7 @@
     constructor({ currentTabKey = 'current_signin_tab', tabSelector = 'ul.nav-tabs' } = {}) {
       this.currentTabKey = currentTabKey;
       this.tabSelector = tabSelector;
+      this.isLocalStorageAvailable = isPropertyAccessSafe(window, 'localStorage');
       this.bootstrap();
     }
 
@@ -37,11 +40,11 @@
     }
 
     saveData(val) {
-      if (localStorage) localStorage.setItem(this.currentTabKey, val);
+      if (this.isLocalStorageAvailable) localStorage.setItem(this.currentTabKey, val);
     }
 
     readData() {
-      return localStorage ? localStorage.getItem(this.currentTabKey) : null;
+      return this.isLocalStorageAvailable ? localStorage.getItem(this.currentTabKey) : null;
     }
   }
 

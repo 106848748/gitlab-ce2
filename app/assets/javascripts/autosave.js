@@ -1,8 +1,11 @@
 /* eslint-disable func-names, space-before-function-paren, wrap-iife, no-param-reassign, quotes, prefer-template, no-var, one-var, no-unused-vars, one-var-declaration-per-line, no-void, consistent-return, no-empty, max-len */
+import { isPropertyAccessSafe } from './lib/utils/accessor';
+
 
 window.Autosave = (function() {
   function Autosave(field, key) {
     this.field = field;
+    this.isLocalStorageAvailable = isPropertyAccessSafe(window, 'localStorage');
     if (key.join != null) {
       key = key.join("/");
     }
@@ -18,7 +21,7 @@ window.Autosave = (function() {
 
   Autosave.prototype.restore = function() {
     var e, text;
-    if (window.localStorage == null) {
+    if (!this.isLocalStorageAvailable) {
       return;
     }
     try {
@@ -35,7 +38,7 @@ window.Autosave = (function() {
 
   Autosave.prototype.save = function() {
     var text;
-    if (window.localStorage == null) {
+    if (!this.isLocalStorageAvailable) {
       return;
     }
     text = this.field.val();
@@ -49,7 +52,7 @@ window.Autosave = (function() {
   };
 
   Autosave.prototype.reset = function() {
-    if (window.localStorage == null) {
+    if (!this.isLocalStorageAvailable) {
       return;
     }
     try {
