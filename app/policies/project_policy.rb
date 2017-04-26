@@ -1,5 +1,5 @@
 class ProjectPolicy < BasePolicy
-  def self.crua(name)
+  def self.create_read_update_admin(name)
     [
       :"create_#{name}",
       :"read_#{name}",
@@ -209,28 +209,28 @@ class ProjectPolicy < BasePolicy
   end
 
   rule { merge_requests_disabled | repository_disabled }.policy do
-    prevent(*crua(:merge_request))
+    prevent(*create_read_update_admin(:merge_request))
   end
 
   rule { issues_disabled & merge_requests_disabled }.policy do
-    prevent(*crua(:label))
-    prevent(*crua(:milestone))
+    prevent(*create_read_update_admin(:label))
+    prevent(*create_read_update_admin(:milestone))
   end
 
   rule { snippets_disabled }.policy do
-    prevent(*crua(:project_snippet))
+    prevent(*create_read_update_admin(:project_snippet))
   end
 
   rule { wiki_disabled & ~has_external_wiki }.policy do
-    prevent(*crua(:wiki))
+    prevent(*create_read_update_admin(:wiki))
     prevent(:download_wiki_code)
   end
 
   rule { builds_disabled | repository_disabled }.policy do
-    prevent(*crua(:build))
-    prevent(*crua(:pipeline))
-    prevent(*crua(:environment))
-    prevent(*crua(:deployment))
+    prevent(*create_read_update_admin(:build))
+    prevent(*create_read_update_admin(:pipeline))
+    prevent(*create_read_update_admin(:environment))
+    prevent(*create_read_update_admin(:deployment))
   end
 
   rule { repository_disabled }.policy do
@@ -242,7 +242,7 @@ class ProjectPolicy < BasePolicy
   end
 
   rule { container_registry_disabled }.policy do
-    prevent(*crua(:container_image))
+    prevent(*create_read_update_admin(:container_image))
   end
 
   rule { anonymous & ~public_project }.prevent_all
