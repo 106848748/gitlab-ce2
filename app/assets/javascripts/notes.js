@@ -112,8 +112,6 @@ require('./task_list');
       $(document).off("click", ".note-edit-cancel");
       $(document).off("click", ".js-note-delete");
       $(document).off("click", ".js-note-attachment-delete");
-      $(document).off("ajax:complete", ".js-main-target-form");
-      $(document).off("ajax:success", ".js-main-target-form");
       $(document).off("click", ".js-discussion-reply-button");
       $(document).off("click", ".js-add-diff-note-button");
       $(document).off("visibilitychange");
@@ -1128,7 +1126,9 @@ require('./task_list');
         success(note) {
           $notesContainer.find(`#${uniqueId}`).remove();
           if (isDiscussionForm) {
+            $notesContainer.find('.flash-container').remove();
             self.addDiscussionNote($form, note);
+            $notesContainer.append('<div class="flash-container" style="display: none;"></div>');
           } else if (isMainForm) {
             self.addNote($form, note);
             self.reenableTargetFormSubmitButton(e);
