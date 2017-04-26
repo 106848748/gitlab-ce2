@@ -68,13 +68,13 @@ describe 'Explore Groups page', :js, :feature do
     end
 
     it 'should be dismissable' do
-      find('.dismiss-icon').click
+      find('.dismiss-button').click
 
       expect(page).not_to have_content('Below you will find all the groups that are public.')
     end
 
     it 'should persistently not show once dismissed' do
-      find('.dismiss-icon').click
+      find('.dismiss-button').click
 
       visit explore_groups_path
 
