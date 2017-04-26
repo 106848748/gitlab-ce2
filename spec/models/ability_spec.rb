@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Ability, lib: true do
   context 'using a nil subject' do
-    it 'is always empty' do
+    it 'has no permissions' do
       expect(Ability.policy_for(nil, nil)).to be_banned
     end
   end
