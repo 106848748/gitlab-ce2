@@ -18,7 +18,7 @@
         isLoading: false,
         endpoint: DOMdata.endpoint,
         store,
-        graph: store.state.graph,
+        state: store.state,
       };
     },
 
@@ -71,7 +71,11 @@
     <ul
       v-if="!isLoading"
       class="stage-column-list">
-      Graph goes here!!
+      <stage-column-component
+        v-for="stage in state.graph"
+        :title="stage.title"
+        :jobs="stage.jobs"
+        :key="stage.name"/>
     </ul>
   </div>
 </template>
