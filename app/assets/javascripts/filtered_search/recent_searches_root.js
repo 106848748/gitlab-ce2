@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import RecentSearchesDropdownContent from './components/recent_searches_dropdown_content';
-import RecentSearchesService from './services/recent_searches_service';
 import eventHub from './event_hub';
 
 class RecentSearchesRoot {
@@ -30,13 +29,15 @@ class RecentSearchesRoot {
   }
 
   render() {
+    const state = this.store.state;
     this.vm = new Vue({
       el: this.wrapperElement,
-      data: this.store.state,
+      data() { return state; },
       template: `
         <recent-searches-dropdown-content
           :items="recentSearches"
-          :serviceIsAvailable="${RecentSearchesService.isAvailable()}" />
+          :isServiceAvailable="isServiceAvailable"
+          />
       `,
       components: {
         'recent-searches-dropdown-content': RecentSearchesDropdownContent,

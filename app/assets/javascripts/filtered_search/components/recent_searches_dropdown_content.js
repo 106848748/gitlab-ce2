@@ -8,7 +8,7 @@ export default {
       type: Array,
       required: true,
     },
-    serviceIsAvailable: {
+    isServiceAvailable: {
       type: Boolean,
       required: false,
       default: true,
@@ -53,7 +53,7 @@ export default {
   template: `
     <div>
       <div
-        v-if="!serviceIsAvailable"
+        v-if="!isServiceAvailable"
         class="dropdown-info-note">
         Recent searches requires local storage to be enabled
       </div>

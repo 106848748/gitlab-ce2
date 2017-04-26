@@ -15,7 +15,9 @@ class FilteredSearchManager {
     this.tokensContainer = this.container.querySelector('.tokens-container');
     this.filteredSearchTokenKeys = gl.FilteredSearchTokenKeys;
 
-    this.recentSearchesStore = new RecentSearchesStore();
+    this.recentSearchesStore = new RecentSearchesStore({
+      isServiceAvailable: RecentSearchesService.isAvailable(),
+    });
     let recentSearchesKey = 'issue-recent-searches';
     if (page === 'merge_requests') {
       recentSearchesKey = 'merge-request-recent-searches';
