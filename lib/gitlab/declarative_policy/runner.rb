@@ -84,13 +84,23 @@ module DeclarativePolicy
       @state
     end
 
-    # NOTE: yes, this is quadratic. but the number of steps
-    # is likely never going to exceed about 10, and with this
-    # approach we re-score as we go, eliminating the need
-    # for some expensive conditions to be calculated
     def steps_by_score(&b)
+      if @steps.size > 50
+        warn "DeclarativePolicy: large number of steps (#{steps.size}), falling back to static sort"
+
+        @steps.map { |s| [s.score, s] }.sort_by { |(score, _)| score }.each do |(score, step)|
+          yield step, score
+        end
+
+        return
+      end
+
       steps = Set.new(@steps)
 
+      # NOTE: this is quadratic, but we've verified that the
+      # number of steps is at most 50, and with this approach we
+      # re-score as we go, eliminating the need for some expensive
+      # conditions to be calcuated.
       loop do
         return if steps.empty?
 
