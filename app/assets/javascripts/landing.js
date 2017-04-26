@@ -1,10 +1,10 @@
 import Cookies from 'js-cookie';
 
 class Landing {
-  constructor(landingElement, cookieName) {
+  constructor(landingElement, dismissButton, cookieName) {
     this.landingElement = landingElement;
     this.cookieName = cookieName;
-    this.dismissButton = this.landingElement.querySelector('.dismiss-icon');
+    this.dismissButton = dismissButton;
     this.eventWrapper = {};
   }
 
@@ -27,6 +27,7 @@ class Landing {
   dismissLanding() {
     this.landingElement.classList.add('hidden');
     Cookies.set(this.cookieName, true, { expires: 365 });
+    debugger
   }
 
   isDismissed() {

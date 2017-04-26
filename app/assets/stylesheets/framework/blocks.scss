@@ -259,20 +259,22 @@
   overflow: hidden;
   position: relative;
 
-  &> .row {
+  > .row {
     @media (min-width: $screen-sm-min) {
       display: flex;
       align-items: center;
     }
   }
 
-  .dismiss-icon {
+  .dismiss-button {
     position: absolute;
     right: $cycle-analytics-box-padding;
     cursor: pointer;
     color: $gray-darkest;
     z-index: 1;
     padding-right: 5px;
+    border: none;
+    background-color: transparent;
   }
 
   .svg-container {

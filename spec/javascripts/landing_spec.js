@@ -1,16 +1,14 @@
 import Landing from '~/landing';
 import Cookies from 'js-cookie';
 
-describe('Landing', function () {
+fdescribe('Landing', function () {
   describe('class constructor', function () {
     beforeEach(function () {
-      this.landingElement = { querySelector: () => {} };
+      this.landingElement = {};
       this.dismissButton = {};
       this.cookieName = 'cookie_name';
 
-      spyOn(this.landingElement, 'querySelector').and.returnValue(this.dismissButton);
-
-      this.landing = new Landing(this.landingElement, this.cookieName);
+      this.landing = new Landing(this.landingElement, this.dismissButton, this.cookieName);
     });
 
     it('should set .landing', function () {
@@ -19,10 +17,6 @@ describe('Landing', function () {
 
     it('should set .cookieName', function () {
       expect(this.landing.cookieName).toBe(this.cookieName);
-    });
-
-    it('should call .querySelector', function () {
-      expect(this.landingElement.querySelector).toHaveBeenCalledWith('.dismiss-icon');
     });
 
     it('should set .dismissButton', function () {
