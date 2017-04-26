@@ -55,7 +55,7 @@ export default {
       <div
         v-if="!isServiceAvailable"
         class="dropdown-info-note">
-        Recent searches requires local storage to be enabled
+        This feature requires local storage to be enabled
       </div>
       <ul v-else-if="hasItems">
         <li
