@@ -15,8 +15,12 @@ module Gitlab
       SEARCH_CONTEXT_LINES = 3
 
       NoRepository = Class.new(StandardError)
+      InvalidStorage = Class.new(StandardError)
       InvalidBlobName = Class.new(StandardError)
       InvalidRef = Class.new(StandardError)
+
+      # Path to where the repository is stored
+      attr_reader :storage_path
 
       # Full path to repo
       attr_reader :path
@@ -33,8 +37,8 @@ module Gitlab
         @repository_storage = repository_storage
         @relative_path = relative_path
 
-        storage_path = Gitlab.config.repositories.storages[@repository_storage]['path']
-        @path = File.join(storage_path, @relative_path)
+        @storage_path = Gitlab.config.repositories.storages[@repository_storage]['path']
+        @path = File.join(@storage_path, @relative_path)
         @name = @relative_path.split("/").last
         @attributes = Gitlab::Git::Attributes.new(path)
       end
@@ -66,6 +70,10 @@ module Gitlab
       def rugged
         @rugged ||= Rugged::Repository.new(path, alternates: alternate_object_directories)
       rescue Rugged::RepositoryError, Rugged::OSError
+        unless File.directory?(storage_path)
+          raise InvalidStorage.new("storage unavailable: #{storage_path}")
+        end
+
         raise NoRepository.new('no repository for such path')
       end
 

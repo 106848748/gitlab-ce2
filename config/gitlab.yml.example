@@ -582,6 +582,9 @@ test:
     path: tmp/tests/pages
   repositories:
     storages:
+      broken:
+        path: tmp/tests/invalid_repository_storage/
+        gitaly_address: unix:tmp/tests/gitaly/missing_gitaly.socket
       default:
         path: tmp/tests/repositories/
         gitaly_address: unix:tmp/tests/gitaly/gitaly.socket

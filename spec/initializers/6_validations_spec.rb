@@ -84,6 +84,16 @@ describe '6_validations', lib: true do
         expect { validate_storages_paths }.not_to raise_error
       end
     end
+
+    context 'when non-existant storage paths' do
+      before do
+        mock_storages('foo' => { 'path' => 'tmp/tests/paths/a/b/broken' })
+      end
+
+      it 'throws an error' do
+        expect { validate_storages_paths }.to raise_error(Errno::ENOENT)
+      end
+    end
   end
 
   def mock_storages(storages)

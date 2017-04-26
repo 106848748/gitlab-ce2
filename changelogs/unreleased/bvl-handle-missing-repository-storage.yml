@@ -1,0 +1,4 @@
+---
+title: Raise different exception when repository storage goes offline
+merge_request: 10971
+author:

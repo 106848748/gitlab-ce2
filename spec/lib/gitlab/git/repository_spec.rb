@@ -69,6 +69,20 @@ describe Gitlab::Git::Repository, seed_helper: true do
         repository.rugged
       end
     end
+
+    context 'exceptions' do
+      it 'raises `NoRepository` when there is no repository present' do
+        repository = described_class.new('default', 'non-existant')
+
+        expect { repository.rugged }.to raise_error(described_class::NoRepository)
+      end
+
+      it 'raises `InvalidStorage` when the storage is missing' do
+        repository = described_class.new('broken', TEST_REPO_PATH)
+
+        expect { repository.rugged }.to raise_error(described_class::InvalidStorage)
+      end
+    end
   end
 
   describe "#discover_default_branch" do
