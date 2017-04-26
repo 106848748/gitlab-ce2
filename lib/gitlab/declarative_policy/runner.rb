@@ -108,7 +108,7 @@ module DeclarativePolicy
         # prevent steps left, we short-circuit the state here
         @state.prevent! if !@state.enabled? && steps.all? { |s| s.action == :prevent }
 
-        lowest_score = 1.0 / 0 # infinity
+        lowest_score = Float::INFINITY
         next_step = nil
 
         steps.each do |step|
