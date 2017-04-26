@@ -1,7 +1,7 @@
 import Landing from '~/landing';
 import Cookies from 'js-cookie';
 
-fdescribe('Landing', function () {
+describe('Landing', function () {
   describe('class constructor', function () {
     beforeEach(function () {
       this.landingElement = {};
@@ -135,7 +135,7 @@ fdescribe('Landing', function () {
     });
 
     it('should call Cookies.set', function () {
-      expect(Cookies.set).toHaveBeenCalledWith(this.cookieName, true, { expires: 365 });
+      expect(Cookies.set).toHaveBeenCalledWith(this.cookieName, 'true', { expires: 365 });
     });
   });
 
@@ -144,7 +144,7 @@ fdescribe('Landing', function () {
       this.cookieName = 'cookie_name';
       this.landing = { cookieName: this.cookieName };
 
-      spyOn(Cookies, 'get').and.returnValue(true);
+      spyOn(Cookies, 'get').and.returnValue('true');
 
       this.isDismissed = Landing.prototype.isDismissed.call(this.landing);
     });
@@ -153,8 +153,8 @@ fdescribe('Landing', function () {
       expect(Cookies.get).toHaveBeenCalledWith(this.cookieName);
     });
 
-    it('should return a Boolean', function () {
-      expect(this.isDismissed).toEqual(true);
+    it('should return a boolean', function () {
+      expect(typeof this.isDismissed).toEqual('boolean');
     });
   });
 });

@@ -258,6 +258,9 @@
   margin-bottom: $gl-padding;
   overflow: hidden;
   position: relative;
+  border: 1px solid $blue-300;
+  border-radius: $border-radius-default;
+  background-color: $blue-25;
 
   > .row {
     @media (min-width: $screen-sm-min) {
@@ -270,11 +273,17 @@
     position: absolute;
     right: $cycle-analytics-box-padding;
     cursor: pointer;
-    color: $gray-darkest;
+    color: $blue-300;
     z-index: 1;
     padding-right: 5px;
     border: none;
     background-color: transparent;
+
+    &:hover,
+    &:focus {
+      border: none;
+      color: $blue-400;
+    }
   }
 
   .svg-container {
@@ -293,7 +302,7 @@
     }
 
     p {
-      color: $cycle-analytics-box-text-color;
+      color: $gl-text-color;
       margin-bottom: $gl-padding;
     }
   }

@@ -26,12 +26,11 @@ class Landing {
 
   dismissLanding() {
     this.landingElement.classList.add('hidden');
-    Cookies.set(this.cookieName, true, { expires: 365 });
-    debugger
+    Cookies.set(this.cookieName, 'true', { expires: 365 });
   }
 
   isDismissed() {
-    return /^(true|1)$/.test(Cookies.get(this.cookieName));
+    return Cookies.get(this.cookieName) === 'true';
   }
 }
 
