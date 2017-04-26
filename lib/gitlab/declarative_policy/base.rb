@@ -120,9 +120,9 @@ module DeclarativePolicy
     end
 
     def can?(ability, new_subject = :_self)
-      return Ability.can?(user, ability, new_subject) unless new_subject == :_self
+      return allowed?(ability) if new_subject == :_self
 
-      allowed?(ability)
+      Ability.can?(user, ability, new_subject)
     end
 
     def allowed?(ability)
