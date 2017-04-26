@@ -140,7 +140,8 @@ function generateUnicodeSupportMap(testMap) {
 
 function getUnicodeSupportMap() {
   let unicodeSupportMap;
-  const userAgentFromCache = window.localStorage.getItem('gl-emoji-user-agent');
+  let userAgentFromCache;
+  if (window.localStorage) userAgentFromCache = window.localStorage.getItem('gl-emoji-user-agent');
   try {
     unicodeSupportMap = JSON.parse(window.localStorage.getItem('gl-emoji-unicode-support-map'));
   } catch (err) {
@@ -148,8 +149,10 @@ function getUnicodeSupportMap() {
   }
   if (!unicodeSupportMap || userAgentFromCache !== navigator.userAgent) {
     unicodeSupportMap = generateUnicodeSupportMap(unicodeSupportTestMap);
-    window.localStorage.setItem('gl-emoji-user-agent', navigator.userAgent);
-    window.localStorage.setItem('gl-emoji-unicode-support-map', JSON.stringify(unicodeSupportMap));
+    if (window.localStorage) {
+      window.localStorage.setItem('gl-emoji-user-agent', navigator.userAgent);
+      window.localStorage.setItem('gl-emoji-unicode-support-map', JSON.stringify(unicodeSupportMap));
+    }
   }
 
   return unicodeSupportMap;
