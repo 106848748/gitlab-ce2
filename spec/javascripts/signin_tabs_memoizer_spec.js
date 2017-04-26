@@ -1,3 +1,5 @@
+import * as accessorUtilitiesSrc from '~/lib/utils/accessor';
+
 require('~/signin_tabs_memoizer');
 
 ((global) => {
@@ -48,6 +50,70 @@ require('~/signin_tabs_memoizer');
       document.getElementById('standard').click();
 
       expect(memo.readData()).toEqual('#standard');
+    });
+
+    fdescribe('class constructor', () => {
+      beforeEach(() => {
+        memo = createMemoizer();
+
+        spyOn(accessorUtilitiesSrc, 'isPropertyAccessSafe').and.returnValue(true);
+      });
+
+      it('should set .isLocalStorageAvailable', () => {
+        /* eslint-disable import/no-named-as-default-member */
+        expect(accessorUtilitiesSrc.isPropertyAccessSafe).toHaveBeenCalledWith(window, 'localStorage');
+        /* eslint-enable import/no-named-as-default-member */
+        expect(memo.isLocalStorageAvailable).toBe(true);
+      });
+    });
+
+    fdescribe('saveData', () => {
+      window.localStorage = jasmine.createSpyObj('localStorage', ['setItem']);
+      memo = {};
+
+      describe('if .isLocalStorageAvailable is `false`', () => {
+        beforeEach(function () {
+          memo.isLocalStorageAvailable = false;
+
+          global.ActiveTabMemoizer.prototype.saveData.call(memo);
+        });
+
+        it('should not call .setItem', () => {
+          expect(localStorage.setItem).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('if .isLocalStorageAvailable is `true`', () => {
+        const value = 'value';
+
+        beforeEach(function () {
+          memo.isLocalStorageAvailable = true;
+
+          global.ActiveTabMemoizer.prototype.saveData.call(memo, value);
+        });
+
+        it('should call .setItem', () => {
+          expect(localStorage.setItem).toHaveBeenCalledWith(currentTabKey, value);
+        });
+      });
+    });
+
+    describe('readData', () => {
+      const value = 'value';
+
+      describe('if .isLocalStorageAvailable is `false`', () => {
+        it('should not call .getItem and should return `null`', () => {
+          expect(localStorage.getItem).not.toHaveBeenCalled();
+          expect(readData).toBe(null);
+        });
+      });
+
+      describe('if .isLocalStorageAvailable is `true`', () => {
+        it('should call .getItem and return the localStorage value', () => {
+          expect(localStorage.getItem).toHaveBeenCalledWith(currentTabKey);
+          expect(readData).toBe(value);
+        });
+      });
     });
   });
 })(window);
