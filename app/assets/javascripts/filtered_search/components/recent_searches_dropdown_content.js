@@ -8,6 +8,11 @@ export default {
       type: Array,
       required: true,
     },
+    serviceIsAvailable: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
 
   computed: {
@@ -47,7 +52,12 @@ export default {
 
   template: `
     <div>
-      <ul v-if="hasItems">
+      <div
+        v-if="!serviceIsAvailable"
+        class="dropdown-info-note">
+        Recent searches requires local storage to be enabled
+      </div>
+      <ul v-else-if="hasItems">
         <li
           v-for="(item, index) in processedItems"
           :key="index">

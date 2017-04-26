@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import RecentSearchesDropdownContent from './components/recent_searches_dropdown_content';
+import RecentSearchesService from './services/recent_searches_service';
 import eventHub from './event_hub';
 
 class RecentSearchesRoot {
@@ -34,7 +35,8 @@ class RecentSearchesRoot {
       data: this.store.state,
       template: `
         <recent-searches-dropdown-content
-          :items="recentSearches" />
+          :items="recentSearches"
+          :serviceIsAvailable="${RecentSearchesService.isAvailable()}" />
       `,
       components: {
         'recent-searches-dropdown-content': RecentSearchesDropdownContent,
