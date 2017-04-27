@@ -14,4 +14,7 @@ const AccessorUtilities = {
   isPropertyAccessSafe,
 };
 
-export { AccessorUtilities as default, isPropertyAccessSafe };
+export {
+  AccessorUtilities as default,
+  isPropertyAccessSafe,
+};

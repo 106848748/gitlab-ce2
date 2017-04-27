@@ -1,4 +1,4 @@
-import * as accessorUtilitiesSrc from '~/lib/utils/accessor';
+import AccessorUtilities from '~/lib/utils/accessor';
 
 require('~/signin_tabs_memoizer');
 
@@ -52,24 +52,29 @@ require('~/signin_tabs_memoizer');
       expect(memo.readData()).toEqual('#standard');
     });
 
-    fdescribe('class constructor', () => {
+    describe('class constructor', () => {
       beforeEach(() => {
-        memo = createMemoizer();
+        spyOn(AccessorUtilities, 'isPropertyAccessSafe').and.returnValue(true);
 
-        spyOn(accessorUtilitiesSrc, 'isPropertyAccessSafe').and.returnValue(true);
+        memo = createMemoizer();
       });
 
       it('should set .isLocalStorageAvailable', () => {
         /* eslint-disable import/no-named-as-default-member */
-        expect(accessorUtilitiesSrc.isPropertyAccessSafe).toHaveBeenCalledWith(window, 'localStorage');
+        expect(AccessorUtilities.isPropertyAccessSafe).toHaveBeenCalledWith(window, 'localStorage');
         /* eslint-enable import/no-named-as-default-member */
         expect(memo.isLocalStorageAvailable).toBe(true);
       });
     });
 
-    fdescribe('saveData', () => {
-      window.localStorage = jasmine.createSpyObj('localStorage', ['setItem']);
-      memo = {};
+    describe('saveData', () => {
+      beforeEach(() => {
+        memo = {
+          currentTabKey,
+        };
+
+        spyOn(localStorage, 'setItem');
+      });
 
       describe('if .isLocalStorageAvailable is `false`', () => {
         beforeEach(function () {
@@ -99,9 +104,24 @@ require('~/signin_tabs_memoizer');
     });
 
     describe('readData', () => {
-      const value = 'value';
+      const itemValue = 'itemValue';
+      let readData;
+
+      beforeEach(() => {
+        memo = {
+          currentTabKey,
+        };
+
+        spyOn(localStorage, 'getItem').and.returnValue(itemValue);
+      });
 
       describe('if .isLocalStorageAvailable is `false`', () => {
+        beforeEach(function () {
+          memo.isLocalStorageAvailable = false;
+
+          readData = global.ActiveTabMemoizer.prototype.readData.call(memo);
+        });
+
         it('should not call .getItem and should return `null`', () => {
           expect(localStorage.getItem).not.toHaveBeenCalled();
           expect(readData).toBe(null);
@@ -109,9 +129,15 @@ require('~/signin_tabs_memoizer');
       });
 
       describe('if .isLocalStorageAvailable is `true`', () => {
+        beforeEach(function () {
+          memo.isLocalStorageAvailable = true;
+
+          readData = global.ActiveTabMemoizer.prototype.readData.call(memo);
+        });
+
         it('should call .getItem and return the localStorage value', () => {
-          expect(localStorage.getItem).toHaveBeenCalledWith(currentTabKey);
-          expect(readData).toBe(value);
+          expect(window.localStorage.getItem).toHaveBeenCalledWith(currentTabKey);
+          expect(readData).toBe(itemValue);
         });
       });
     });

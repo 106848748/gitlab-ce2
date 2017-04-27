@@ -1,6 +1,6 @@
 /* eslint no-param-reassign: ["error", { "props": false }]*/
 /* eslint no-new: "off" */
-import { isPropertyAccessSafe } from './lib/utils/accessor';
+import AccessorUtilities from './lib/utils/accessor';
 
 ((global) => {
   /**
@@ -11,7 +11,9 @@ import { isPropertyAccessSafe } from './lib/utils/accessor';
     constructor({ currentTabKey = 'current_signin_tab', tabSelector = 'ul.nav-tabs' } = {}) {
       this.currentTabKey = currentTabKey;
       this.tabSelector = tabSelector;
-      this.isLocalStorageAvailable = isPropertyAccessSafe(window, 'localStorage');
+      /* eslint-disable import/no-named-as-default-member */
+      this.isLocalStorageAvailable = AccessorUtilities.isPropertyAccessSafe(window, 'localStorage');
+      /* eslint-enable import/no-named-as-default-member */
       this.bootstrap();
     }
 
@@ -40,11 +42,11 @@ import { isPropertyAccessSafe } from './lib/utils/accessor';
     }
 
     saveData(val) {
-      if (this.isLocalStorageAvailable) localStorage.setItem(this.currentTabKey, val);
+      if (this.isLocalStorageAvailable) window.localStorage.setItem(this.currentTabKey, val);
     }
 
     readData() {
-      return this.isLocalStorageAvailable ? localStorage.getItem(this.currentTabKey) : null;
+      return this.isLocalStorageAvailable ? window.localStorage.getItem(this.currentTabKey) : null;
     }
   }
 

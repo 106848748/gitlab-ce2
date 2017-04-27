@@ -1,11 +1,12 @@
 /* eslint-disable func-names, space-before-function-paren, wrap-iife, no-param-reassign, quotes, prefer-template, no-var, one-var, no-unused-vars, one-var-declaration-per-line, no-void, consistent-return, no-empty, max-len */
-import { isPropertyAccessSafe } from './lib/utils/accessor';
-
+import AccessorUtilities from './lib/utils/accessor';
 
 window.Autosave = (function() {
   function Autosave(field, key) {
     this.field = field;
-    this.isLocalStorageAvailable = isPropertyAccessSafe(window, 'localStorage');
+    /* eslint-disable import/no-named-as-default-member */
+    this.isLocalStorageAvailable = AccessorUtilities.isPropertyAccessSafe(window, 'localStorage');
+    /* eslint-enable import/no-named-as-default-member */
     if (key.join != null) {
       key = key.join("/");
     }
@@ -62,3 +63,5 @@ window.Autosave = (function() {
 
   return Autosave;
 })();
+
+export default window.Autosave;
