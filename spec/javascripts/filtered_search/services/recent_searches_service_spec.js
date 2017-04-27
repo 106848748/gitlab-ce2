@@ -1,6 +1,7 @@
 /* eslint-disable promise/catch-or-return */
 
 import RecentSearchesService from '~/filtered_search/services/recent_searches_service';
+import AccessorUtilities from '~/lib/utils/accessor';
 
 describe('RecentSearchesService', () => {
   let service;
@@ -44,6 +45,20 @@ describe('RecentSearchesService', () => {
           done();
         });
     });
+
+    describe('if .isAvailable returns `false`', () => {
+      beforeEach(() => {
+        spyOn(RecentSearchesService, 'isAvailable').and.returnValue(false);
+
+        spyOn(window.localStorage, 'getItem');
+
+        RecentSearchesService.prototype.fetch();
+      });
+
+      it('should not call .getItem', () => {
+        expect(window.localStorage.getItem).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('setRecentSearches', () => {
@@ -53,6 +68,65 @@ describe('RecentSearchesService', () => {
       const newLocalStorageValue =
         window.localStorage.getItem(service.localStorageKey);
       expect(JSON.parse(newLocalStorageValue)).toEqual(items);
+    });
+  });
+
+  describe('save', () => {
+    beforeEach(() => {
+      spyOn(window.localStorage, 'setItem');
+      spyOn(RecentSearchesService, 'isAvailable');
+    });
+
+    describe('if .isAvailable returns `true`', () => {
+      const searchesString = 'searchesString';
+      const localStorageKey = 'localStorageKey';
+      const recentSearchesService = {
+        localStorageKey,
+      };
+
+      beforeEach(() => {
+        RecentSearchesService.isAvailable.and.returnValue(true);
+
+        spyOn(JSON, 'stringify').and.returnValue(searchesString);
+
+        RecentSearchesService.prototype.save.call(recentSearchesService);
+      });
+
+      it('should call .setItem', () => {
+        expect(window.localStorage.setItem).toHaveBeenCalledWith(localStorageKey, searchesString);
+      });
+    });
+
+    describe('if .isAvailable returns `false`', () => {
+      beforeEach(() => {
+        RecentSearchesService.isAvailable.and.returnValue(false);
+
+        RecentSearchesService.prototype.save();
+      });
+
+      it('should not call .setItem', () => {
+        expect(window.localStorage.setItem).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('isAvailable', () => {
+    let isAvailable;
+
+    beforeEach(() => {
+      spyOn(AccessorUtilities, 'isPropertyAccessSafe').and.callThrough();
+
+      isAvailable = RecentSearchesService.isAvailable();
+    });
+
+    it('should call .isPropertyAccessSafe', () => {
+      /* eslint-disable import/no-named-as-default-member */
+      expect(AccessorUtilities.isPropertyAccessSafe).toHaveBeenCalledWith(window, 'localStorage');
+      /* eslint-enable import/no-named-as-default-member */
+    });
+
+    it('should return a boolean', () => {
+      expect(typeof isAvailable).toBe('boolean');
     });
   });
 });

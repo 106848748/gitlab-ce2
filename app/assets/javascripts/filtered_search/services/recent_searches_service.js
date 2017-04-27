@@ -1,4 +1,4 @@
-import { isPropertyAccessSafe } from '../../lib/utils/accessor';
+import AccessorUtilities from '../../lib/utils/accessor';
 
 class RecentSearchesService {
   constructor(localStorageKey = 'issuable-recent-searches') {
@@ -31,7 +31,7 @@ class RecentSearchesService {
   }
 
   static isAvailable() {
-    return isPropertyAccessSafe(window, 'localStorage');
+    return AccessorUtilities.isPropertyAccessSafe(window, 'localStorage');
   }
 }
 
