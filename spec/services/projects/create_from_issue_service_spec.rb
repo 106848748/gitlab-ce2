@@ -22,7 +22,7 @@ describe MergeRequests::CreateFromIssueService, services: true do
     it 'delegates issue search to IssuesFinder' do
       expect_any_instance_of(IssuesFinder).to receive(:execute).once.and_call_original
 
-      result = described_class.new(project, user, issue_iid: -1).execute
+      described_class.new(project, user, issue_iid: -1).execute
     end
 
     it 'delegates the branch creation to CreateBranchService' do
@@ -44,9 +44,7 @@ describe MergeRequests::CreateFromIssueService, services: true do
     end
 
     it 'creates a merge request' do
-      expect {
-        service.execute
-      }.to change(project.merge_requests, :count).by(1)
+      expect { service.execute }.to change(project.merge_requests, :count).by(1)
     end
 
     it 'sets the merge request title to: "WIP: Resolves "$issue-title"' do
