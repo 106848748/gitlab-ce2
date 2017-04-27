@@ -257,17 +257,12 @@
 .landing {
   margin-bottom: $gl-padding;
   overflow: hidden;
+  display: flex;
   position: relative;
   border: 1px solid $blue-300;
   border-radius: $border-radius-default;
   background-color: $blue-25;
-
-  > .row {
-    @media (min-width: $screen-sm-min) {
-      display: flex;
-      align-items: center;
-    }
-  }
+  justify-content: center;
 
   .dismiss-button {
     position: absolute;
@@ -287,10 +282,12 @@
   }
 
   .svg-container {
-    text-align: center;
+    align-self: center;
   }
 
   .inner-content {
+    text-align: left;
+
     @media (max-width: $screen-sm-min) {
       padding: 0 28px;
       text-align: center;
