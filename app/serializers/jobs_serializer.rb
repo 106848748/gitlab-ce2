@@ -29,12 +29,12 @@ class JobsSerializer < BaseSerializer
   def represent_status(list, opts = {})
     # TODO: We don't really have a first class concept
     # for JobsGroup that would make it possible to have status for that
-    detailed_status =
-      if group_jobs.one?
-        group_jobs.first.detailed_status(request.user)
+    resource =
+      if list.one?
+        list.first.detailed_status(request.user)
       else
         Gitlab::Ci::Status::Group::Factory
-            .new(CommitStatus.where(id: group_jobs), request.user)
+            .new(CommitStatus.where(id: list), request.user)
             .fabricate!
       end
 
