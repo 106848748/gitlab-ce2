@@ -10,11 +10,13 @@ export default class CreateMergeRequestDropdown {
   constructor(wrapperEl) {
     this.wrapperEl = wrapperEl;
     this.createMergeRequestButton = this.wrapperEl.querySelector('.js-create-merge-request');
-    this.dropdownToggle = this.wrapperEl.querySelector('.dropdown-toggle');
+    this.dropdownToggle = this.wrapperEl.querySelector('.js-dropdown-toggle');
     this.dropdownList = this.wrapperEl.querySelector('.dropdown-menu');
     this.availableButton = this.wrapperEl.querySelector('.available');
     this.unavailableButton = this.wrapperEl.querySelector('.unavailable');
 
+    this.canCreatePath = this.wrapperEl.dataset.canCreatePath;
+    this.createMrPath = this.wrapperEl.dataset.createMrPath;
     this.droplabInitialized = false;
     this.isCreatingMergeRequest = false;
     this.mergeRequestCreated = false;
@@ -55,28 +57,23 @@ export default class CreateMergeRequestDropdown {
   }
 
   checkAbilityToCreateBranch() {
-    const xhr = $.getJSON(this.wrapperEl.dataset.canCreatePath);
+    return $.getJSON(this.canCreatePath)
+      .done((data) => {
+        if (data.can_create_branch) {
+          this.available();
+          this.enable();
 
-    xhr.done((data) => {
-      if (data.can_create_branch) {
-        this.available();
-        this.enable();
-
-        if (!this.droplabInitialized) {
-          this.droplabInitialized = true;
-          this.initDroplab();
-          this.bindEvents();
+          if (!this.droplabInitialized) {
+            this.droplabInitialized = true;
+            this.initDroplab();
+            this.bindEvents();
+          }
         }
-      }
-    });
-
-    xhr.fail(() => {
-      this.unavailable(); // just to make sure
-      this.disable();
-      new Flash('Failed to check if a new branch can be created.');
-    });
-
-    return xhr;
+      }).fail(() => {
+        this.unavailable();
+        this.disable();
+        new Flash('Failed to check if a new branch can be created.');
+      });
   }
 
   initDroplab() {
@@ -125,7 +122,7 @@ export default class CreateMergeRequestDropdown {
       xhr = this.createBranch();
     }
 
-    xhr.error(() => {
+    xhr.fail(() => {
       this.isCreatingMergeRequest = false;
       this.isCreatingBranch = false;
     });
@@ -136,40 +133,30 @@ export default class CreateMergeRequestDropdown {
   }
 
   createMergeRequest() {
-    const xhr = $.ajax({
+    return $.ajax({
       method: 'POST',
       dataType: 'json',
-      url: this.wrapperEl.dataset.createMrPath,
-    });
-
-    this.isCreatingMergeRequest = true;
-
-    xhr.done((data) => {
+      url: this.createMrPath,
+      beforeSend: () => (this.isCreatingMergeRequest = true),
+    })
+    .done((data) => {
       this.mergeRequestCreated = true;
       window.location.href = data.url;
-    });
-
-    xhr.fail(() => new Flash('Failed to create Merge Request. Please try again.'));
-
-    return xhr;
+    })
+    .fail(() => new Flash('Failed to create Merge Request. Please try again.'));
   }
 
   createBranch() {
-    const xhr = $.ajax({
+    return $.ajax({
       method: 'POST',
       dataType: 'json',
       url: this.wrapperEl.dataset.createBranch,
-    });
-
-    this.isCreatingBranch = true;
-
-    xhr.done((data) => {
+      beforeSend: () => (this.isCreatingBranch = true),
+    })
+    .done((data) => {
       this.branchCreated = true;
       window.location.href = data.url;
-    });
-
-    xhr.fail(() => new Flash('Failed to create a branch for this issue. Please try again.'));
-
-    return xhr;
+    })
+    .fail(() => new Flash('Failed to create a branch for this issue. Please try again.'));
   }
 }

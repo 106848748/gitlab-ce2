@@ -5,14 +5,14 @@
         %button.btn.btn-grouped{ type: 'button', disabled: 'disabled' }
           = icon('exclamation-triangle')
           New branch unavailable
-          %button.btn.btn-inverted.disabled{ type: 'button', disabled: 'disabled' }
+          %button.btn.btn-inverted.disabled.dropdown-toggle{ type: 'button', disabled: 'disabled' }
             = icon('caret-down')
       .btn-group.available.hide
         %input.btn.js-create-merge-request.btn-inverted.btn-success{ type: 'submit', value: 'Create merge request', data: { action: 'create-mr' } }
-        %button.btn.btn-inverted.dropdown-toggle.btn-inverted.btn-success{ type: 'button', data: { 'dropdown-trigger' => '#create-merge-request-dropdown' } }
+        %button.btn.btn-inverted.dropdown-toggle.btn-inverted.btn-success.js-dropdown-toggle{ type: 'button', data: { 'dropdown-trigger' => '#create-merge-request-dropdown' } }
           = icon('caret-down')
         %ul#create-merge-request-dropdown.dropdown-menu.dropdown-menu-align-right{ data: { dropdown: true } }
-          %li.droplab-item-selected{ data: { value: 'create-mr', 'text' => 'Create merge request' } }
+          %li.droplab-item-selected{ data: { value: 'create-mr', 'text' => 'Create a merge request' } }
             .menu-item
               .icon-container
                 = icon('check')
@@ -20,12 +20,12 @@
                 %strong Create a merge request
                 %span
                   Creates a branch named after this issue and a merge request. The source branch is 'master' by default.
-          %li.divider
-          %li{ data: {  value: 'create-branch', 'text' => 'Create branch' } }
+          %li.divider.droplab-item-ignore
+          %li{ data: {  value: 'create-branch', 'text' => 'Create a branch' } }
             .menu-item
               .icon-container
                 = icon('check')
               .description
                 %strong Create a branch
                 %span
-                  Create a branch named after this issue. The source branch is 'master' by default.
+                  Creates a branch named after this issue. The source branch is 'master' by default.

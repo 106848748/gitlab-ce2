@@ -34,7 +34,6 @@ class Issue {
   }
 
   initIssueBtnEventListeners() {
-    const self = this;
     const issueFailMessage = 'Unable to update this issue at this time.';
     const closeButtons = $('a.btn-close');
     const isClosedBadge = $('div.status-box-closed');
@@ -42,28 +41,27 @@ class Issue {
     const projectIssuesCounter = $('.issue_counter');
     const reopenButtons = $('a.btn-reopen');
 
-    return closeButtons.add(reopenButtons).on('click', function(e) {
-      var $this, shouldSubmit, url;
+    return closeButtons.add(reopenButtons).on('click', (e) => {
+      var $button, shouldSubmit, url;
       e.preventDefault();
       e.stopImmediatePropagation();
-      $this = $(this);
-      shouldSubmit = $this.hasClass('btn-comment');
+      $button = $(e.currentTarget);
+      shouldSubmit = $button.hasClass('btn-comment');
       if (shouldSubmit) {
-        Issue.submitNoteForm($this.closest('form'));
+        Issue.submitNoteForm($button.closest('form'));
       }
-      $this.prop('disabled', true);
-      url = $this.attr('href');
+      $button.prop('disabled', true);
+      url = $button.attr('href');
       return $.ajax({
         type: 'PUT',
         url: url
-      }).fail(function(jqXHR, textStatus, errorThrown) {
-        // Todo check this
-        new Flash(issueFailMessage);
-      }).done(function(data, textStatus, jqXHR) {
+      })
+      .fail(() => new Flash(issueFailMessage))
+      .done((data) => {
         if ('id' in data) {
           $(document).trigger('issuable:change');
 
-          const isClosed = $this.hasClass('btn-close');
+          const isClosed = $button.hasClass('btn-close');
           closeButtons.toggleClass('hidden', isClosed);
           reopenButtons.toggleClass('hidden', !isClosed);
           isClosedBadge.toggleClass('hidden', !isClosed);
@@ -74,16 +72,17 @@ class Issue {
           projectIssuesCounter.text(gl.text.addDelimiter(numProjectIssues));
 
           if (isClosed) {
-            self.createMergeRequestDropdown.disable();
+            this.createMergeRequestDropdown.unavailable();
+            this.createMergeRequestDropdown.disable();
           } else {
-            // We should check in case a branch was creted in another tab
-            self.createMergeRequestDropdown.checkAbilityToCreateBranch();
+            // We should check in case a branch was created in another tab
+            this.createMergeRequestDropdown.checkAbilityToCreateBranch();
           }
         } else {
           new Flash(issueFailMessage);
         }
 
-        $this.prop('disabled', false);
+        $button.prop('disabled', false);
       });
     });
   }
