@@ -325,6 +325,12 @@
   transition: max-height 0.3s, padding 0.3s;
   overflow: auto;
 
+  .loading-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .stage-column-list,
   .builds-container > ul {
     padding: 0;

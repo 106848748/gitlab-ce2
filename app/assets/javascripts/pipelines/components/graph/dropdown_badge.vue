@@ -2,6 +2,29 @@
   import jobNameComponent from './job_name.vue';
   import badgeComponent from './badge.vue';
 
+  /**
+   * Renders the dropdown for the pipeline graph.
+   *
+   * The following object should be provided as `job`:
+   *
+   * {
+   *   "id": 4256,
+   *   "name": "test",
+   *   "status": {
+   *     "icon": "icon_status_success",
+   *     "text": "passed",
+   *     "label": "passed",
+   *     "group": "success",
+   *     "details_path": "/root/ci-mock/builds/4256",
+   *     "action": {
+   *       "icon": "icon_action_retry",
+   *       "title": "Retry",
+   *       "path": "/root/ci-mock/builds/4256/retry",
+   *       "method": "post"
+   *     }
+   *   }
+   * }
+   */
   export default {
     props: {
       job: {

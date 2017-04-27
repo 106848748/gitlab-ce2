@@ -1,9 +1,11 @@
 <script>
+  /* global Flash */
   import Visibility from 'visibilityjs';
   import Poll from '../../../lib/utils/poll';
   import PipelineService from '../../services/pipeline_service';
   import PipelineStore from '../../stores/pipeline_store';
   import stageColumnComponent from './stage_column.vue';
+  import '../../../flash';
 
   export default {
     components: {
@@ -56,7 +58,7 @@
 
       errorCallback() {
         this.isLoading = false;
-        // Warn user!
+        return new Flash('An error occurred while fetching the pipeline.');
       },
     },
   };
@@ -66,7 +68,7 @@
     <div class="pipeline-visualization pipeline-graph">
       <i
         v-if="isLoading"
-        class="fa fa-spin fa-spinner"
+        class="loading-icon fa fa-spin fa-spinner fa-3x"
         aria-label="Loading" />
 
       <ul

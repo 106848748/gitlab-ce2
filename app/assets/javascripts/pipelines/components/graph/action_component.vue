@@ -1,7 +1,12 @@
 <script>
   import cancelSVG from 'icons/_icon_action_cancel.svg';
   import retrySVG from 'icons/_icon_action_retry.svg';
+  import playSVG from 'icons/_icon_action_play.svg';
 
+  /**
+   * Renders either a cancel, retry or play icon pointing to the given path.
+   * TODO: Remove UJS from here and use an async request instead.
+   */
   export default {
     props: {
       tooltipText: {
@@ -43,7 +48,11 @@
           case 'icon_action_retry':
             icon = retrySVG;
             break;
+          case 'icon_action_play':
+            icon = playSVG;
+            break;
           default:
+            icon = '';
         }
 
         return icon;
