@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-require('../lib/utils/text_utility')
-
+require('../lib/utils/text_utility');
 const DEFAULT_EVENT_OBJECTS = require('./default_event_objects');
 
 const global = window.gl || (window.gl = {});

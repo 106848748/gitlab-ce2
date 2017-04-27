@@ -1,4 +1,4 @@
-require('~/pipelines');
+import Pipelines from '~/pipelines';
 
 // Fix for phantomJS
 if (!Element.prototype.matches && Element.prototype.webkitMatchesSelector) {
@@ -14,15 +14,15 @@ if (!Element.prototype.matches && Element.prototype.webkitMatchesSelector) {
     });
 
     it('should be defined', () => {
-      expect(window.gl.Pipelines).toBeDefined();
+      expect(Pipelines).toBeDefined();
     });
 
     it('should create a `Pipelines` instance without options', () => {
-      expect(() => { new window.gl.Pipelines(); }).not.toThrow(); //eslint-disable-line
+      expect(() => { new Pipelines(); }).not.toThrow(); //eslint-disable-line
     });
 
     it('should create a `Pipelines` instance with options', () => {
-      const pipelines = new window.gl.Pipelines({ foo: 'bar' });
+      const pipelines = new Pipelines({ foo: 'bar' });
 
       expect(pipelines.pipelineGraph).toBeDefined();
     });

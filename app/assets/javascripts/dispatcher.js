@@ -48,6 +48,7 @@ import BlobForkSuggestion from './blob/blob_fork_suggestion';
 import UserCallout from './user_callout';
 import { ProtectedTagCreate, ProtectedTagEditList } from './protected_tags';
 import ShortcutsWiki from './shortcuts_wiki';
+import Pipelines from './pipelines';
 
 const ShortcutsBlob = require('./shortcuts_blob');
 
@@ -241,7 +242,7 @@ const ShortcutsBlob = require('./shortcuts_blob');
           const { controllerAction } = document.querySelector('.js-pipeline-container').dataset;
           const pipelineStatusUrl = `${document.querySelector('.js-pipeline-tab-link a').getAttribute('href')}/status.json`;
 
-          new gl.Pipelines({
+          new Pipelines({
             initTabs: true,
             pipelineStatusUrl,
             tabsOptions: {
