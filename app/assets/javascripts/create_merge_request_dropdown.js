@@ -138,6 +138,7 @@ export default class CreateMergeRequestDropdown {
   createMergeRequest() {
     const xhr = $.ajax({
       method: 'POST',
+      dataType: 'json',
       url: this.wrapperEl.dataset.createMrPath,
     });
 
