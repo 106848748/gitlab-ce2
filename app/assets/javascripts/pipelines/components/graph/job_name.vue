@@ -1,6 +1,5 @@
 <script>
-  import { dasherize } from '../../../lib/utils/text_utility';
-  import StatusIconEntityMap from '../../../ci_status_icons';
+  import ciIcon from '../../../vue_shared/components/ci_icon.vue';
 
   export default {
     props: {
@@ -15,25 +14,15 @@
       },
     },
 
-    computed: {
-      iconContainerClass() {
-        const dasherizedIconClass = dasherize(this.status.icon);
-
-        return `ci-status-icon ci-status-${dasherizedIconClass} js-ci-status-${dasherizedIconClass}`;
-      },
-
-      statusIconSvg() {
-        return StatusIconEntityMap[this.status.icon];
-      },
+    components: {
+      ciIcon,
     },
   };
 </script>
 <template>
   <span>
-    <span
-      :class="iconContainerClass"
-      v-html="statusIconSvg">
-    </span>
+    <ci-icon
+      :status="status" />
 
     <span class="ci-status-text">
       {{name}}

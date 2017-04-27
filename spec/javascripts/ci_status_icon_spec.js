@@ -1,4 +1,4 @@
-import * as icons from '~/ci_status_icons';
+import * as icons from '~/vue_shared/ci_status_icons';
 
 describe('CI status icons', () => {
   const statuses = [

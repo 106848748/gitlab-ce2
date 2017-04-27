@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { SUCCESS_SVG } from '~/ci_status_icons';
+import SUCCESS_SVG from 'icons/_icon_status_success_borderless.svg';
 import Stage from '~/pipelines/components/stage';
 
 function minify(string) {
