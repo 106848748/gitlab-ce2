@@ -49,12 +49,10 @@
     :title="tooltipText"
     :href="link"
     ref="tooltip"
-    class="ci-action-icon-container"
+    rel="nofollow"
+    class="ci-action-icon-wrapper js-ci-status-icon"
     data-toggle="tooltip"
-    data-container="body">
-
-    <i
-      class="ci-action-icon-wrapper"
-      v-html="actionIconSvg" />
+    data-container="body"
+    v-html="actionIconSvg">
   </a>
 </template>

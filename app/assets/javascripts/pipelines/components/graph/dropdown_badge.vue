@@ -43,6 +43,14 @@
         return `${this.job.name} - ${this.job.status.label}`;
       },
     },
+
+    mounted() {
+      $(this.$refs.tooltip).tooltip();
+    },
+
+    updated() {
+      $(this.$refs.tooltip).tooltip('fixTitle');
+    },
   };
 </script>
 <template>
@@ -51,8 +59,9 @@
       type="button"
       data-toggle="dropdown"
       data-container="body"
-      class="dropdown-menu-toggle build-content has-tooltip"
-      :title="tooltipText">
+      class="dropdown-menu-toggle build-content"
+      :title="tooltipText"
+      ref="tooltip">
 
       <job-name-component
         :name="job.name"
@@ -69,6 +78,7 @@
         <li v-for="item in job.list">
           <badge-component
             :job="item"
+            :is-dropdown="true"
             css-class-job-name="mini-pipeline-graph-dropdown-item"
             />
         </li>

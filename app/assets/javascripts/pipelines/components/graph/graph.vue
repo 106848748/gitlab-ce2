@@ -60,6 +60,10 @@
         this.isLoading = false;
         return new Flash('An error occurred while fetching the pipeline.');
       },
+
+      capitalizeStageName(name) {
+        return name.charAt(0).toUpperCase() + name.slice(1);
+      },
     },
   };
 </script>
@@ -76,7 +80,7 @@
         class="stage-column-list">
         <stage-column-component
           v-for="stage in state.graph"
-          :title="stage.title"
+          :title="capitalizeStageName(stage.name)"
           :jobs="stage.jobs"
           :key="stage.name"/>
       </ul>

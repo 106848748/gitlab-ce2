@@ -1,5 +1,6 @@
 <script>
   import actionComponent from './action_component.vue';
+  import dropdownActionComponent from './dropdown_action_component.vue';
   import jobNameComponent from './job_name.vue';
 
   /**
@@ -28,10 +29,6 @@
 
   export default {
     props: {
-
-      /**
-       *
-       */
       job: {
         type: Object,
         required: true,
@@ -48,10 +45,17 @@
         required: false,
         default: '',
       },
+
+      isDropdown: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
 
     components: {
       actionComponent,
+      dropdownActionComponent,
       jobNameComponent,
     },
 
@@ -74,8 +78,17 @@
         return this.job.status && this.job.status.action && this.job.status.action.path;
       },
     },
-  };
 
+    mounted() {
+      $(this.$refs['linked-job-name']).tooltip();
+      $(this.$refs['job-name']).tooltip();
+    },
+
+    updated() {
+      $(this.$refs['linked-job-name']).tooltip('fixTitle');
+      $(this.$refs['job-name']).tooltip('fixTitle');
+    },
+  };
 </script>
 <template>
   <div>
@@ -84,28 +97,41 @@
       :href="job.status.details_path"
       :title="tooltipText"
       :class="cssClassJobName"
+      ref="linked-job-name"
       data-toggle="tooltip"
       data-container="body">
 
       <job-name-component
         :name="job.name"
-        :status="job.status" />
+        :status="job.status"
+        />
     </a>
 
     <div
       v-else
       :title="tooltipText"
       :class="cssClassJobName"
+      ref="job-name"
+      class="has-tooltip"
       data-toggle="tooltip"
       data-container="body">
 
       <job-name-component
         :name="job.name"
-        :status="job.stauts" />
+        :status="job.stauts"
+        />
     </div>
 
     <action-component
-      v-if="hasAction"
+      v-if="hasAction && !isDropdown"
+      :tooltip-text="job.status.action.title"
+      :link="job.status.action.path"
+      :action-icon="job.status.action.icon"
+      :action-method="job.status.action.method"
+      />
+
+    <dropdown-action-component
+      v-if="hasAction && isDropdown"
       :tooltip-text="job.status.action.title"
       :link="job.status.action.path"
       :action-icon="job.status.action.icon"

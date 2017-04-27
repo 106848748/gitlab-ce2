@@ -69,7 +69,6 @@ export default {
       return `mini-pipeline-graph-dropdown-toggle has-tooltip js-builds-dropdown-button ci-status-icon-${this.stage.status.group}`;
     },
     svgHTML() {
-      debugger;
       return BorderlessStatusIconEntityMap[this.stage.status.icon];
     },
   },
