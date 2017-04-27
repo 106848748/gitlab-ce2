@@ -1,5 +1,6 @@
 /* eslint-disable func-names, space-before-function-paren, no-var, prefer-rest-params, wrap-iife, one-var, no-underscore-dangle, one-var-declaration-per-line, object-shorthand, no-unused-vars, no-new, comma-dangle, consistent-return, quotes, dot-notation, quote-props, prefer-arrow-callback, max-len */
-/* global Flash */
+ /* global Flash */
+import CreateMergeRequestDropdown from './create_merge_request_dropdown';
 
 require('./flash');
 require('~/lib/utils/text_utility');
@@ -18,19 +19,23 @@ class Issue {
           document.querySelector('#task_status_short').innerText = result.task_status_short;
         }
       });
-      Issue.initIssueBtnEventListeners();
+      this.initIssueBtnEventListeners();
     }
 
     Issue.$btnNewBranch = $('#new-branch');
 
     Issue.initMergeRequests();
     Issue.initRelatedBranches();
-    Issue.initCanCreateBranch();
+
+    const wrapperEl = document.querySelector('.create-mr-dropdown-wrap');
+    if (wrapperEl) {
+      this.createMergeRequestDropdown = new CreateMergeRequestDropdown(wrapperEl);
+    }
   }
 
-  static initIssueBtnEventListeners() {
+  initIssueBtnEventListeners() {
+    const self = this;
     const issueFailMessage = 'Unable to update this issue at this time.';
-
     const closeButtons = $('a.btn-close');
     const isClosedBadge = $('div.status-box-closed');
     const isOpenBadge = $('div.status-box-open');
@@ -47,14 +52,13 @@ class Issue {
         Issue.submitNoteForm($this.closest('form'));
       }
       $this.prop('disabled', true);
-      Issue.setNewBranchButtonState(true, null);
       url = $this.attr('href');
       return $.ajax({
         type: 'PUT',
         url: url
       }).fail(function(jqXHR, textStatus, errorThrown) {
+        // Todo check this
         new Flash(issueFailMessage);
-        Issue.initCanCreateBranch();
       }).done(function(data, textStatus, jqXHR) {
         if ('id' in data) {
           $(document).trigger('issuable:change');
@@ -68,12 +72,18 @@ class Issue {
           let numProjectIssues = Number(projectIssuesCounter.text().replace(/[^\d]/, ''));
           numProjectIssues = isClosed ? numProjectIssues - 1 : numProjectIssues + 1;
           projectIssuesCounter.text(gl.text.addDelimiter(numProjectIssues));
+
+          if (isClosed) {
+            self.createMergeRequestDropdown.disable();
+          } else {
+            // We should check in case a branch was creted in another tab
+            self.createMergeRequestDropdown.checkAbilityToCreateBranch();
+          }
         } else {
           new Flash(issueFailMessage);
         }
 
         $this.prop('disabled', false);
-        Issue.initCanCreateBranch();
       });
     });
   }
@@ -108,29 +118,6 @@ class Issue {
         return $container.html(data.html);
       }
     });
-  }
-
-  static initCanCreateBranch() {
-    // If the user doesn't have the required permissions the container isn't
-    // rendered at all.
-    if (Issue.$btnNewBranch.length === 0) {
-      return;
-    }
-    return $.getJSON(Issue.$btnNewBranch.data('path')).fail(function() {
-      Issue.setNewBranchButtonState(false, false);
-      new Flash('Failed to check if a new branch can be created.');
-    }).done(function(data) {
-      Issue.setNewBranchButtonState(false, data.can_create_branch);
-    });
-  }
-
-  static setNewBranchButtonState(isPending, canCreate) {
-    if (Issue.$btnNewBranch.length === 0) {
-      return;
-    }
-
-    Issue.$btnNewBranch.find('.available').toggle(!isPending && canCreate);
-    Issue.$btnNewBranch.find('.unavailable').toggle(!isPending && !canCreate);
   }
 }
 

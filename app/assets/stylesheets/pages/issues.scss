@@ -161,3 +161,61 @@ ul.related-merge-requests > li {
 .recaptcha {
   margin-bottom: 30px;
 }
+
+.create-mr-dropdown-wrap {
+  .dropdown-menu {
+    min-width: 280px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    display: none;
+  }
+
+  .dropdown-toggle {
+    .fa-caret-down {
+      pointer-events: none;
+      margin-left: 0;
+      color: inherit;
+      margin-left: 0;
+    }
+  }
+
+  li:not(.divider) {
+    padding: 6px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background-color: $dropdown-hover-color;
+      color: $white-light;
+    }
+
+    &.droplab-item-selected {
+      .icon-container {
+        i {
+          visibility: visible;
+        }
+      }
+    }
+
+    .icon-container {
+      float: left;
+      padding-left: 6px;
+
+      i {
+        visibility: hidden;
+      }
+    }
+
+    .description {
+      padding-left: 30px;
+      font-size: 13px;
+
+      strong {
+        display: block;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
