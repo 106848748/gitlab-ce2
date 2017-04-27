@@ -13,7 +13,7 @@
     },
 
     data() {
-      const DOMdata = this.$options.parent.$el.dataset;
+      const DOMdata = document.querySelector('#js-pipeline-graph-vue').dataset;
       const store = new PipelineStore();
 
       return {

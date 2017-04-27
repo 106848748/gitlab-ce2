@@ -21,10 +21,10 @@
           icon_status_failed: 'failed',
           icon_status_pending: 'pending',
           icon_status_running: 'running',
-          icon_play: 'play',
           icon_status_created: 'created',
           icon_status_skipped: 'skipped',
           icon_status_manual: 'manual',
+          icon_status_canceled: 'canceled',
         };
 
         return `ci-status-icon ci-status-icon-${statusToCSS[this.status.icon]} js-status-icon-${statusToCSS[this.status.icon]}`;

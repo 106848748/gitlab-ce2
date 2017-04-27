@@ -34,12 +34,6 @@
         required: true,
       },
 
-      cssClassAction: {
-        type: String,
-        required: false,
-        default: '',
-      },
-
       cssClassJobName: {
         type: String,
         required: false,
