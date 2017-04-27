@@ -1,4 +1,4 @@
-import { isPropertyAccessSafe } from '../../lib/utils/accessor';
+import AccessorUtilities from '../../lib/utils/accessor';
 
 const unicodeSupportTestMap = {
   // man, student (emojione does not have any of these yet), http://emojipedia.org/emoji-zwj-sequences/
@@ -144,7 +144,9 @@ function getUnicodeSupportMap() {
   let unicodeSupportMap;
   let userAgentFromCache;
 
-  const isLocalStorageAvailable = isPropertyAccessSafe(window, 'localStorage');
+  /* eslint-disable import/no-named-as-default-member */
+  const isLocalStorageAvailable = AccessorUtilities.isPropertyAccessSafe(window, 'localStorage');
+  /* eslint-enable import/no-named-as-default-member */
 
   if (isLocalStorageAvailable) userAgentFromCache = window.localStorage.getItem('gl-emoji-user-agent');
   try {
