@@ -1,3 +1,6 @@
+import * as recentSearchesStoreSrc from '~/filtered_search/stores/recent_searches_store';
+import RecentSearchesService from '~/filtered_search/services/recent_searches_service';
+
 require('~/lib/utils/url_utility');
 require('~/lib/utils/common_utils');
 require('~/filtered_search/filtered_search_token_keys');
@@ -54,6 +57,27 @@ describe('Filtered Search Manager', () => {
 
   afterEach(() => {
     manager.cleanup();
+  });
+
+  describe('class constructor', () => {
+    const isAvailable = 'isAvailable';
+    let filteredSearchManager;
+
+    beforeEach(() => {
+      spyOn(RecentSearchesService, 'isAvailable').and.returnValue(isAvailable);
+      spyOn(recentSearchesStoreSrc, 'default');
+
+      filteredSearchManager = new gl.FilteredSearchManager();
+
+      return filteredSearchManager;
+    });
+
+    it('should instantiate RecentSearchesStore with isServiceAvailable', () => {
+      expect(RecentSearchesService.isAvailable).toHaveBeenCalled();
+      expect(recentSearchesStoreSrc.default).toHaveBeenCalledWith({
+        isServiceAvailable: isAvailable,
+      });
+    });
   });
 
   describe('search', () => {

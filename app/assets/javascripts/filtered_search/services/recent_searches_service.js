@@ -31,7 +31,9 @@ class RecentSearchesService {
   }
 
   static isAvailable() {
+    /* eslint-disable import/no-named-as-default-member */
     return AccessorUtilities.isPropertyAccessSafe(window, 'localStorage');
+    /* eslint-enable import/no-named-as-default-member */
   }
 }
 
