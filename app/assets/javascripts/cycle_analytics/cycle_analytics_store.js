@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import { dasherize } from '../lib/utils/text_utility';
+require('../lib/utils/text_utility')
 
 const DEFAULT_EVENT_OBJECTS = require('./default_event_objects');
 
@@ -39,7 +39,7 @@ global.cycleAnalytics.CycleAnalyticsStore = {
     });
 
     newData.stages.forEach((item) => {
-      const stageSlug = dasherize(item.title.toLowerCase());
+      const stageSlug = gl.text.dasherize(item.title.toLowerCase());
       item.active = false;
       item.isUserAllowed = data.permissions[stageSlug];
       item.emptyStageText = EMPTY_STAGE_TEXTS[stageSlug];
