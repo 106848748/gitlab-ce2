@@ -459,7 +459,7 @@
     color: $gl-text-color-secondary;
 
     // Action Icons in big pipeline-graph nodes
-    > .ci-action-icon-container .ci-action-icon-wrapper {
+    > div > .ci-action-icon-container .ci-action-icon-wrapper {
       height: 30px;
       width: 30px;
       background: $white-light;
@@ -484,7 +484,7 @@
       }
     }
 
-    > .ci-action-icon-container {
+    > div > .ci-action-icon-container {
       position: absolute;
       right: 5px;
       top: 5px;
@@ -514,7 +514,7 @@
       }
     }
 
-    > .build-content {
+    > div > .build-content {
       display: inline-block;
       padding: 8px 10px 9px;
       width: 100%;

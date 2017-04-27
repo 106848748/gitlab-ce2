@@ -1,4 +1,7 @@
 <script>
+  import jobNameComponent from './job_name.vue';
+  import badgeComponent from './badge.vue';
+
   export default {
     props: {
       job: {
@@ -7,24 +10,20 @@
       },
     },
 
+    components: {
+      badgeComponent,
+      jobNameComponent,
+    },
+
     computed: {
       tooltipText() {
         return `${this.job.name} - ${this.job.status.label}`;
       },
-
-      statusIcon() {
-        // return SVG
-      },
-
-      statusClass() {
-        return `ci-status-icon ci-status-icon-${this.job.status.name}`;
-      },
-
     },
   };
 </script>
 <template>
-  <template>
+  <div>
     <button
       type="button"
       data-toggle="dropdown"
@@ -32,13 +31,9 @@
       class="dropdown-menu-toggle build-content has-tooltip"
       :title="tooltipText">
 
-      <span class="statusClass">
-        Icon goes here
-      </span>
-
-      <span class="ci-status-text">
-        {{job.name}}
-      </span>
+      <job-name-component
+        :name="job.name"
+        :status="job.status" />
 
       <span class="dropdown-counter-badge">
         {{job.size}}
@@ -46,64 +41,15 @@
     </button>
 
     <ul class="dropdown-menu big-pipeline-graph-dropdown-menu js-grouped-pipeline-dropdown">
-      <div class="arror"></div>
+      <div class="arrow"></div>
       <div class="scrollable-menu">
         <li v-for="item in job.list">
-
+          <badge-component
+            :job="item"
+            css-class-job-name="mini-pipeline-graph-dropdown-item"
+            />
         </li>
       </div>
     </ul>
-  </template>
-
-    <!-- Status Icon -->
-
-    <a
-      v-if="job.details_path"
-      :href="job.details_path"
-      :title="tooltipText"
-      class="build-content"
-      data-toggle="tooltip"
-      data-container="body">
-
-      <span
-        :class="iconContainerClass"
-        v-html="statusIcon">
-      </span>
-      <div class="ci-status-text">
-          {{job.name}}
-      </div>
-    </a>
-
-    <div
-      v-else
-      class="build-content"
-      :title="tooltipText"
-      data-toggle="tooltip"
-      data-container="body">
-      <span
-        :class="iconContainerClass"
-        v-html="statusIcon">
-      </span>
-      <div class="ci-status-text">
-          {{job.name}}
-      </div>
-    </div>
-
-    <!-- Action or Dropdown -->
-
-    <a
-      v-if="job.action_path"
-      :data-method="job.action_method"
-      :title="job.action_title"
-      class="ci-action-icon-container has-tooltip"
-      data-toggle="tooltip"
-      data-container="body">
-
-      <i
-        class="ci-action-icon-wrapper">
-        v-html="actionIconSvg"
-      </i>
-    </a>
-
-  </li>
+  </div>
 </template>

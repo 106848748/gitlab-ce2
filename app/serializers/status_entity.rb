@@ -11,9 +11,9 @@ class StatusEntity < Grape::Entity
   end
 
   expose :action, if: -> (status, _) { status.has_action? } do
-  expose :action_icon, as: :icon
-  expose :action_title, as: :title
-  expose :action_path, as: :path
-  expose :action_method, as: :method
-end
+    expose :action_icon, as: :icon
+    expose :action_title, as: :title
+    expose :action_path, as: :path
+    expose :action_method, as: :method
+  end
 end

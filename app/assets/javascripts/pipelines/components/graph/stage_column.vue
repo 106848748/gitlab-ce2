@@ -1,5 +1,6 @@
 <script>
 import badgeComponent from './badge.vue';
+import dropdownBadgeComponent from './dropdown_badge.vue';
 
 export default {
   props: {
@@ -16,31 +17,34 @@ export default {
 
   components: {
     badgeComponent,
+    dropdownBadgeComponent,
   },
 };
 </script>
 <template>
   <li class="stage-column">
     <div class="stage-name">
-      <a name="title">{{title}}</a>
+      {{title}}
     </div>
     <div class="builds-container">
       <ul>
         <li
           v-for="job in jobs"
           :key="job.id"
-          class="build"
-          id="badgeId">
+          class="build">
 
           <div class="curve"></div>
 
           <badge-component
             v-if="job.size === 1"
-            :job="job"/>
+            :job="job.list[0]"
+            css-class-job-name="build-content"
+            />
 
-          <dropwdown-badge-component
+          <dropdown-badge-component
             v-if="job.size > 1"
-            :job="job" />
+            :job="job"
+            />
 
         </li>
       </ul>

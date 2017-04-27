@@ -62,20 +62,22 @@
   };
 </script>
 <template>
-  <div class="pipeline-visualization pipeline-graph">
-    <i
-      v-if="isLoading"
-      class="fa fa-spin fa-spinner"
-      aria-label="Loading" />
+  <div class="build-content middle-block js-pipeline-graph">
+    <div class="pipeline-visualization pipeline-graph">
+      <i
+        v-if="isLoading"
+        class="fa fa-spin fa-spinner"
+        aria-label="Loading" />
 
-    <ul
-      v-if="!isLoading"
-      class="stage-column-list">
-      <stage-column-component
-        v-for="stage in state.graph"
-        :title="stage.title"
-        :jobs="stage.jobs"
-        :key="stage.name"/>
-    </ul>
+      <ul
+        v-if="!isLoading"
+        class="stage-column-list">
+        <stage-column-component
+          v-for="stage in state.graph"
+          :title="stage.title"
+          :jobs="stage.jobs"
+          :key="stage.name"/>
+      </ul>
+    </div>
   </div>
 </template>
