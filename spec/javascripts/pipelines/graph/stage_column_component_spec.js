@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import stageColumnComponent from '~/pipelines/components/graph/stage_column.vue';
+import stageColumnComponent from '~/pipelines/components/graph/stage_column_component.vue';
 
 describe('stage column component', () => {
   let component;

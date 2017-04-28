@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import graphComponent from '~/pipelines/components/graph/graph.vue';
+import graphComponent from '~/pipelines/components/graph/graph_component.vue';
 
 describe('graph component', () => {
   preloadFixtures('static/graph.html.raw');

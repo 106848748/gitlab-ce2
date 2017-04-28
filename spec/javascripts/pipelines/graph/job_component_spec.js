@@ -1,8 +1,8 @@
 import Vue from 'vue';
-import badge from '~/pipelines/components/graph/badge.vue';
+import jobComponent from '~/pipelines/components/graph/job_component.vue';
 
-describe('badge component', () => {
-  let BadgeComponent;
+describe('job component', () => {
+  let JobComponent;
 
   const mockJob = {
     id: 4256,
@@ -23,12 +23,12 @@ describe('badge component', () => {
   };
 
   beforeEach(() => {
-    BadgeComponent = Vue.extend(badge);
+    JobComponent = Vue.extend(jobComponent);
   });
 
   describe('name with link', () => {
     it('should render the job name and status with a link', () => {
-      const component = new BadgeComponent({
+      const component = new JobComponent({
         propsData: {
           job: mockJob,
         },
@@ -52,7 +52,7 @@ describe('badge component', () => {
 
   describe('name without link', () => {
     it('it should render status and name', () => {
-      const component = new BadgeComponent({
+      const component = new JobComponent({
         propsData: {
           job: {
             id: 4256,
@@ -78,7 +78,7 @@ describe('badge component', () => {
 
   describe('action icon', () => {
     it('it should render the action icon', () => {
-      const component = new BadgeComponent({
+      const component = new JobComponent({
         propsData: {
           job: mockJob,
         },
@@ -91,7 +91,7 @@ describe('badge component', () => {
 
   describe('dropdown', () => {
     it('should render the dropdown action icon', () => {
-      const component = new BadgeComponent({
+      const component = new JobComponent({
         propsData: {
           job: mockJob,
           isDropdown: true,
@@ -103,7 +103,7 @@ describe('badge component', () => {
   });
 
   it('should render provided class name', () => {
-    const component = new BadgeComponent({
+    const component = new JobComponent({
       propsData: {
         job: mockJob,
         cssClassJobName: 'css-class-job-name',

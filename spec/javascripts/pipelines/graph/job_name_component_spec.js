@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import jobNameComponent from '~/pipelines/components/graph/job_name.vue';
+import jobNameComponent from '~/pipelines/components/graph/job_name_component.vue';
 
 describe('job name component', () => {
   let component;
