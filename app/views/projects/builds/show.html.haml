@@ -2,7 +2,11 @@
 - page_title "#{@build.name} (##{@build.id})", "Jobs"
 = render "projects/pipelines/head"
 
-%div{ class: container_class }
+- content_for :page_specific_javascripts do
+  = page_specific_javascript_bundle_tag("common_vue")
+  = page_specific_javascript_bundle_tag("build")
+
+#js-build-app-vue{ class: container_class }
   .build-page
     = render "header"
 

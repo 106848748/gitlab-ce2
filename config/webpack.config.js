@@ -21,6 +21,7 @@ var config = {
   entry: {
     blob:                 './blob_edit/blob_bundle.js',
     boards:               './boards/boards_bundle.js',
+    build:                './build/build_bundle.js',
     common:               './commons/index.js',
     common_vue:           ['vue', './vue_shared/common_vue.js'],
     common_d3:            ['d3'],
@@ -115,6 +116,7 @@ var config = {
       name: 'common_vue',
       chunks: [
         'boards',
+        'build',
         'commit_pipelines',
         'cycle_analytics',
         'diff_notes',
