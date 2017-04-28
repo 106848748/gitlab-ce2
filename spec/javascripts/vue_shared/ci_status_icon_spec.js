@@ -1,4 +1,4 @@
-import { BorderlessStatusIconEntityMap, StatusIconEntityMap } from '~/vue_shared/ci_status_icons';
+import { borderlessStatusIconEntityMap, statusIconEntityMap } from '~/vue_shared/ci_status_icons';
 
 describe('CI status icons', () => {
   const statuses = [
@@ -15,13 +15,13 @@ describe('CI status icons', () => {
 
   it('should have a dictionary for borderless icons', () => {
     statuses.forEach((status) => {
-      expect(BorderlessStatusIconEntityMap[status]).toBeDefined();
+      expect(borderlessStatusIconEntityMap[status]).toBeDefined();
     });
   });
 
   it('should have a dictionary for icons', () => {
     statuses.forEach((status) => {
-      expect(StatusIconEntityMap[status]).toBeDefined();
+      expect(statusIconEntityMap[status]).toBeDefined();
     });
   });
 });

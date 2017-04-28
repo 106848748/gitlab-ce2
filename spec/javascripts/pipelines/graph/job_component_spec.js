@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import jobComponent from '~/pipelines/components/graph/job_component.vue';
 
-describe('job component', () => {
+describe('pipeline graph job component', () => {
   let JobComponent;
 
   const mockJob = {
@@ -34,7 +34,7 @@ describe('job component', () => {
         },
       }).$mount();
 
-      const link = component.$el.querySelector('');
+      const link = component.$el.querySelector('a');
 
       expect(link.getAttribute('href')).toEqual(mockJob.status.details_path);
 

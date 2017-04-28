@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import actionComponent from '~/pipelines/components/graph/action_component.vue';
 
-describe('action component', () => {
+describe('pipeline graph action component', () => {
   let component;
 
   beforeEach(() => {
