@@ -18,6 +18,7 @@ export default class CreateMergeRequestDropdown {
     this.availableButton = this.wrapperEl.querySelector('.available');
     this.unavailableButton = this.wrapperEl.querySelector('.unavailable');
 
+    this.createBranchPath = this.wrapperEl.dataset.createBranchPath;
     this.canCreatePath = this.wrapperEl.dataset.canCreatePath;
     this.createMrPath = this.wrapperEl.dataset.createMrPath;
     this.droplabInitialized = false;
@@ -153,7 +154,7 @@ export default class CreateMergeRequestDropdown {
     return $.ajax({
       method: 'POST',
       dataType: 'json',
-      url: this.wrapperEl.dataset.createBranch,
+      url: this.createBranchPath,
       beforeSend: () => (this.isCreatingBranch = true),
     })
     .done((data) => {
