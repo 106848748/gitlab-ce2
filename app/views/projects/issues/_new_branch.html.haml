@@ -8,7 +8,7 @@
           %button.btn.btn-inverted.disabled.dropdown-toggle{ type: 'button', disabled: 'disabled' }
             = icon('caret-down')
       .btn-group.available.hide
-        %input.btn.js-create-merge-request.btn-inverted.btn-success{ type: 'submit', value: 'Create merge request', data: { action: 'create-mr' } }
+        %input.btn.js-create-merge-request.btn-inverted.btn-success{ type: 'button', value: 'Create merge request', data: { action: 'create-mr' } }
         %button.btn.btn-inverted.dropdown-toggle.btn-inverted.btn-success.js-dropdown-toggle{ type: 'button', data: { 'dropdown-trigger' => '#create-merge-request-dropdown' } }
           = icon('caret-down')
         %ul#create-merge-request-dropdown.dropdown-menu.dropdown-menu-align-right{ data: { dropdown: true } }
