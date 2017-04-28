@@ -24,25 +24,14 @@ module API
         project_path.sub(/\A\//, '')
       end
 
-      def project_path
-        @project_path ||= clean_project_path(params[:project])
-      end
-
       def wiki?
-        @wiki ||= project_path.end_with?('.wiki') &&
-          !Project.find_by_full_path(project_path)
+        set_project unless defined?(@wiki)
+        @wiki
       end
 
       def project
-        @project ||= begin
-          # Check for *.wiki repositories.
-          # Strip out the .wiki from the pathname before finding the
-          # project. This applies the correct project permissions to
-          # the wiki repository as well.
-          project_path.chomp!('.wiki') if wiki?
-
-          Project.find_by_full_path(project_path)
-        end
+        set_project unless defined?(@project)
+        @project
       end
 
       def ssh_authentication_abilities
@@ -65,6 +54,41 @@ module API
         commands = Gitlab::GitAccess::DOWNLOAD_COMMANDS
 
         ::Users::ActivityService.new(actor, 'Git SSH').execute if commands.include?(params[:action])
+      end
+
+      private
+
+      def set_project
+        if params[:gl_project]
+          type, id = params[:gl_project].split('-')
+          @project, @wiki = project_by_id(type, id)
+        else
+          project_path = clean_project_path(params[:project])
+          @project, @wiki = project_by_path(project_path)
+        end
+      end
+
+      def project_by_id(type, id)
+        project = Project.find(id)
+        wiki = type == 'wiki'
+
+        [project, wiki]
+      end
+
+      def project_by_path(project_path)
+        project = Project.find_by_full_path(project_path)
+        # Check for *.wiki repositories.
+        if project_path.end_with?('.wiki') && !project
+          # Strip out the .wiki from the pathname before finding the
+          # project. This applies the correct project permissions to
+          # the wiki repository as well.
+          project = Project.find_by_full_path(project_path.chomp('.wiki'))
+          wiki = true
+        else
+          wiki = false
+        end
+
+        [project, wiki]
       end
     end
   end
