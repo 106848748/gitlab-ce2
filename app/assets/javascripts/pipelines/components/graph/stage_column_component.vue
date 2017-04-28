@@ -24,6 +24,10 @@ export default {
     firstJob(list) {
       return list[0];
     },
+
+    jobId(job) {
+      return `ci-badge-${job.name}`;
+    },
   },
 };
 </script>
@@ -37,7 +41,8 @@ export default {
         <li
           v-for="job in jobs"
           :key="job.id"
-          class="build">
+          class="build"
+          :id="jobId(job)">
 
           <div class="curve"></div>
 
