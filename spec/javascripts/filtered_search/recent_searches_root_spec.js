@@ -25,7 +25,7 @@ describe('RecentSearchesRoot', () => {
     it('should instantiate Vue', () => {
       expect(vueSrc.default).toHaveBeenCalled();
       expect(data()).toBe(recentSearchesRoot.store.state);
-      expect(template).toContain(':isServiceAvailable="isServiceAvailable"');
+      expect(template).toContain(':is-service-available="isServiceAvailable"');
     });
   });
 });

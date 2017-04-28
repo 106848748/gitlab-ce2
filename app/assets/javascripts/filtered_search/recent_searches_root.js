@@ -36,7 +36,7 @@ class RecentSearchesRoot {
       template: `
         <recent-searches-dropdown-content
           :items="recentSearches"
-          :isServiceAvailable="isServiceAvailable"
+          :is-service-available="isServiceAvailable"
           />
       `,
       components: {
