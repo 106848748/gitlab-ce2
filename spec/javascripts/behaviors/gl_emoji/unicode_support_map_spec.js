@@ -15,9 +15,8 @@ describe('Unicode Support Map', () => {
 
     describe('if isLocalStorageAvailable is `true`', function () {
       beforeEach(() => {
-        /* eslint-disable import/no-named-as-default-member */
+        // eslint-disable-next-line import/no-named-as-default-member
         AccessorUtilities.isPropertyAccessSafe.and.returnValue(true);
-        /* eslint-enable import/no-named-as-default-member */
 
         getUnicodeSupportMap();
       });
@@ -35,9 +34,8 @@ describe('Unicode Support Map', () => {
 
     describe('if isLocalStorageAvailable is `false`', function () {
       beforeEach(() => {
-        /* eslint-disable import/no-named-as-default-member */
+        // eslint-disable-next-line import/no-named-as-default-member
         AccessorUtilities.isPropertyAccessSafe.and.returnValue(false);
-        /* eslint-enable import/no-named-as-default-member */
 
         getUnicodeSupportMap();
       });

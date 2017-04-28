@@ -144,9 +144,8 @@ function getUnicodeSupportMap() {
   let unicodeSupportMap;
   let userAgentFromCache;
 
-  /* eslint-disable import/no-named-as-default-member */
+  // eslint-disable-next-line import/no-named-as-default-member
   const isLocalStorageAvailable = AccessorUtilities.isPropertyAccessSafe(window, 'localStorage');
-  /* eslint-enable import/no-named-as-default-member */
 
   if (isLocalStorageAvailable) userAgentFromCache = window.localStorage.getItem('gl-emoji-user-agent');
   try {

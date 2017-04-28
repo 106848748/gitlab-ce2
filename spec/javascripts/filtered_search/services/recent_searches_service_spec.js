@@ -120,9 +120,8 @@ describe('RecentSearchesService', () => {
     });
 
     it('should call .isPropertyAccessSafe', () => {
-      /* eslint-disable import/no-named-as-default-member */
+      // eslint-disable-next-line import/no-named-as-default-member
       expect(AccessorUtilities.isPropertyAccessSafe).toHaveBeenCalledWith(window, 'localStorage');
-      /* eslint-enable import/no-named-as-default-member */
     });
 
     it('should return a boolean', () => {

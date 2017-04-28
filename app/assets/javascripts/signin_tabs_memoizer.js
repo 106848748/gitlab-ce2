@@ -11,9 +11,9 @@ import AccessorUtilities from './lib/utils/accessor';
     constructor({ currentTabKey = 'current_signin_tab', tabSelector = 'ul.nav-tabs' } = {}) {
       this.currentTabKey = currentTabKey;
       this.tabSelector = tabSelector;
-      /* eslint-disable import/no-named-as-default-member */
+      // eslint-disable-next-line import/no-named-as-default-member
       this.isLocalStorageAvailable = AccessorUtilities.isPropertyAccessSafe(window, 'localStorage');
-      /* eslint-enable import/no-named-as-default-member */
+
       this.bootstrap();
     }
 

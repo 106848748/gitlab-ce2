@@ -16,9 +16,8 @@ describe('Autosave', () => {
     });
 
     it('should set .isLocalStorageAvailable', () => {
-      /* eslint-disable import/no-named-as-default-member */
+      // eslint-disable-next-line import/no-named-as-default-member
       expect(AccessorUtilities.isPropertyAccessSafe).toHaveBeenCalledWith(window, 'localStorage');
-      /* eslint-enable import/no-named-as-default-member */
       expect(autosave.isLocalStorageAvailable).toBe(true);
     });
   });
