@@ -214,7 +214,7 @@ require('~/lib/utils/text_utility');
       });
 
       it('should call addClass', () => {
-        expect($note.addClass).toHaveBeenCalledWith('fade-in');
+        expect($note.addClass).toHaveBeenCalledWith('fade-in-full');
       });
       it('should call renderGFM', () => {
         expect($note.renderGFM).toHaveBeenCalledWith();
