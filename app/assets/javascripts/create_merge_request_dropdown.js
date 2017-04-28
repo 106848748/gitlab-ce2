@@ -1,7 +1,10 @@
 /* eslint-disable no-new */
 /* global Flash */
 import DropLab from './droplab/drop_lab';
-import InputSetter from './droplab/plugins/input_setter';
+import ISetter from './droplab/plugins/input_setter';
+
+// Todo: Remove this when fixing issue in input_setter plugin
+const InputSetter = Object.assign({}, ISetter);
 
 const CREATE_MERGE_REQUEST = 'create-mr';
 const CREATE_BRANCH = 'create-branch';
