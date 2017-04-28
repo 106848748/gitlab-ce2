@@ -17,6 +17,8 @@ export default class CreateMergeRequestDropdown {
     this.dropdownList = this.wrapperEl.querySelector('.dropdown-menu');
     this.availableButton = this.wrapperEl.querySelector('.available');
     this.unavailableButton = this.wrapperEl.querySelector('.unavailable');
+    this.unavailableButtonArrow = this.unavailableButton.querySelector('.fa');
+    this.unavailableButtonText = this.unavailableButton.querySelector('.text');
 
     this.createBranchPath = this.wrapperEl.dataset.createBranchPath;
     this.canCreatePath = this.wrapperEl.dataset.canCreatePath;
@@ -60,24 +62,43 @@ export default class CreateMergeRequestDropdown {
     this.dropdownToggle.setAttribute('disabled', 'disabled');
   }
 
-  checkAbilityToCreateBranch() {
-    return $.getJSON(this.canCreatePath)
-      .done((data) => {
-        if (data.can_create_branch) {
-          this.available();
-          this.enable();
+  setUnavailableButtonState(isLoading = true) {
+    if (isLoading) {
+      this.unavailableButtonArrow.classList.add('fa-spinner', 'fa-spin');
+      this.unavailableButtonArrow.classList.remove('fa-exclamation-triangle');
+    } else {
+      this.unavailableButtonArrow.classList.remove('fa-spinner', 'fa-spin');
+      this.unavailableButtonArrow.classList.add('fa-exclamation-triangle');
+    }
 
-          if (!this.droplabInitialized) {
-            this.droplabInitialized = true;
-            this.initDroplab();
-            this.bindEvents();
-          }
+    this.unavailableButtonText.textContent = `New branch unavailable${isLoading ? '...' : ''}`;
+  }
+
+  checkAbilityToCreateBranch() {
+    return $.ajax({
+      method: 'GET',
+      dataType: 'json',
+      url: this.canCreatePath,
+      beforeSend: () => this.setUnavailableButtonState(),
+    })
+    .done((data) => {
+      this.setUnavailableButtonState(false);
+
+      if (data.can_create_branch) {
+        this.available();
+        this.enable();
+
+        if (!this.droplabInitialized) {
+          this.droplabInitialized = true;
+          this.initDroplab();
+          this.bindEvents();
         }
-      }).fail(() => {
-        this.unavailable();
-        this.disable();
-        new Flash('Failed to check if a new branch can be created.');
-      });
+      }
+    }).fail(() => {
+      this.unavailable();
+      this.disable();
+      new Flash('Failed to check if a new branch can be created.');
+    });
   }
 
   initDroplab() {
