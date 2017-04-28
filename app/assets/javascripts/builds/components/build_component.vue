@@ -5,10 +5,11 @@ import Visibility from 'visibilityjs';
 import Poll from '../../lib/utils/poll';
 import BuildStore from '../stores/build_store';
 import BuildService from '../services/build_service';
+import loadingIconComponent from '../../vue_shared/components/loading_icon_component.vue';
 
 export default {
   components: {
-
+    loadingIconComponent,
   },
 
   data() {
@@ -65,15 +66,7 @@ export default {
 </script>
 <template>
   <section>
-    <section
-      class="text-center"
-      v-if="isLoading">
-      <i
-        class="fa fa-spin fa-spinner"
-        aria-hidden="true"
-        aria-label="Loading"
-      />
-    </section>
+    <loading-icon-component v-if="isLoading">
 
     <section v-else>
     </section>
