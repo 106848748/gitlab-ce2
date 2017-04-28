@@ -44,8 +44,8 @@ export default class LinkedTabs {
    *
    * @param  {Object} options
    */
-  constructor(options) {
-    this.options = options || {};
+  constructor(options = {}) {
+    this.options = options;
 
     this.defaultAction = this.options.defaultAction;
     this.action = this.options.action || this.defaultAction;

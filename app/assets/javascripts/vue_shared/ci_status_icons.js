@@ -18,7 +18,7 @@ import SKIPPED_SVG from 'icons/_icon_status_skipped.svg';
 import SUCCESS_SVG from 'icons/_icon_status_success.svg';
 import WARNING_SVG from 'icons/_icon_status_warning.svg';
 
-export const BorderlessStatusIconEntityMap = {
+export const borderlessStatusIconEntityMap = {
   icon_status_canceled: BORDERLESS_CANCELED_SVG,
   icon_status_created: BORDERLESS_CREATED_SVG,
   icon_status_failed: BORDERLESS_FAILED_SVG,
@@ -30,7 +30,7 @@ export const BorderlessStatusIconEntityMap = {
   icon_status_warning: BORDERLESS_WARNING_SVG,
 };
 
-export const StatusIconEntityMap = {
+export const statusIconEntityMap = {
   icon_status_canceled: CANCELED_SVG,
   icon_status_created: CREATED_SVG,
   icon_status_failed: FAILED_SVG,
@@ -40,4 +40,16 @@ export const StatusIconEntityMap = {
   icon_status_skipped: SKIPPED_SVG,
   icon_status_success: SUCCESS_SVG,
   icon_status_warning: WARNING_SVG,
+};
+
+export const statusCssClasses = {
+  icon_status_canceled: 'canceled',
+  icon_status_created: 'created',
+  icon_status_failed: 'failed',
+  icon_status_manual: 'manual',
+  icon_status_pending: 'pending',
+  icon_status_running: 'running',
+  icon_status_skipped: 'skipped',
+  icon_status_success: 'success',
+  icon_status_warning: 'warning',
 };

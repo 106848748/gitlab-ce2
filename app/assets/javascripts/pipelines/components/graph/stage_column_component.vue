@@ -1,6 +1,6 @@
 <script>
-import badgeComponent from './badge.vue';
-import dropdownBadgeComponent from './dropdown_badge.vue';
+import jobComponent from './job_component.vue';
+import dropdownJobComponent from './dropdown_job_component.vue';
 
 export default {
   props: {
@@ -16,8 +16,14 @@ export default {
   },
 
   components: {
-    badgeComponent,
-    dropdownBadgeComponent,
+    jobComponent,
+    dropdownJobComponent,
+  },
+
+  methods: {
+    firstJob(list) {
+      return list[0];
+    },
   },
 };
 </script>
@@ -35,13 +41,13 @@ export default {
 
           <div class="curve"></div>
 
-          <badge-component
+          <job-component
             v-if="job.size === 1"
-            :job="job.list[0]"
+            :job="firstJob(job.list)"
             css-class-job-name="build-content"
             />
 
-          <dropdown-badge-component
+          <dropdown-job-component
             v-if="job.size > 1"
             :job="job"
             />

@@ -4,7 +4,7 @@
   import Poll from '../../../lib/utils/poll';
   import PipelineService from '../../services/pipeline_service';
   import PipelineStore from '../../stores/pipeline_store';
-  import stageColumnComponent from './stage_column.vue';
+  import stageColumnComponent from './stage_column_component.vue';
   import '../../../flash';
 
   export default {
@@ -70,10 +70,13 @@
 <template>
   <div class="build-content middle-block js-pipeline-graph">
     <div class="pipeline-visualization pipeline-graph">
-      <i
-        v-if="isLoading"
-        class="loading-icon fa fa-spin fa-spinner fa-3x"
-        aria-label="Loading" />
+      <div class="text-center">
+        <i
+          v-if="isLoading"
+          class="loading-icon fa fa-spin fa-spinner fa-3x"
+          aria-label="Loading"
+          aria-hidden="true" />
+      </div>
 
       <ul
         v-if="!isLoading"

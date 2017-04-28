@@ -4,15 +4,7 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 
 export default class PipelineService {
-  constructor(root) {
-    let endpoint;
-
-    if (root.indexOf('.json') === -1) {
-      endpoint = `${root}.json`;
-    } else {
-      endpoint = root;
-    }
-
+  constructor(endpoint) {
     this.pipeline = Vue.resource(endpoint);
   }
 
