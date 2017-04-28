@@ -19,6 +19,12 @@ export default {
     jobComponent,
     dropdownJobComponent,
   },
+
+  methods: {
+    firstJob(list) {
+      return list[0];
+    },
+  },
 };
 </script>
 <template>
@@ -37,7 +43,7 @@ export default {
 
           <job-component
             v-if="job.size === 1"
-            :job="job.list[0]"
+            :job="firstJob(job.list)"
             css-class-job-name="build-content"
             />
 
