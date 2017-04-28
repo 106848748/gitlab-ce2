@@ -73,7 +73,8 @@
       <i
         v-if="isLoading"
         class="loading-icon fa fa-spin fa-spinner fa-3x"
-        aria-label="Loading" />
+        aria-label="Loading"
+        aria-hidden="true" />
 
       <ul
         v-if="!isLoading"

@@ -2,6 +2,7 @@
   import actionComponent from './action_component.vue';
   import dropdownActionComponent from './dropdown_action_component.vue';
   import jobNameComponent from './job_name.vue';
+  import tooltipMixin from '../../../vue_shared/mixins/tooltip';
 
   /**
    * Renders the badge for the pipeline graph and the job's dropdown.
@@ -59,14 +60,13 @@
       jobNameComponent,
     },
 
+    mixins: [
+      tooltipMixin,
+    ],
+
     computed: {
       tooltipText() {
         return `${this.job.name} - ${this.job.status.label}`;
-      },
-
-      iconContainerClass() {
-        const { group } = this.job.status;
-        return `ci-status-icon ci-status-icon-${group} js-ci-status-icon-${group}`;
       },
 
       /**
@@ -78,16 +78,6 @@
         return this.job.status && this.job.status.action && this.job.status.action.path;
       },
     },
-
-    mounted() {
-      $(this.$refs['linked-job-name']).tooltip();
-      $(this.$refs['job-name']).tooltip();
-    },
-
-    updated() {
-      $(this.$refs['linked-job-name']).tooltip('fixTitle');
-      $(this.$refs['job-name']).tooltip('fixTitle');
-    },
   };
 </script>
 <template>
@@ -97,7 +87,7 @@
       :href="job.status.details_path"
       :title="tooltipText"
       :class="cssClassJobName"
-      ref="linked-job-name"
+      ref="tooltip"
       data-toggle="tooltip"
       data-container="body">
 
@@ -111,8 +101,7 @@
       v-else
       :title="tooltipText"
       :class="cssClassJobName"
-      ref="job-name"
-      class="has-tooltip"
+      ref="tooltip"
       data-toggle="tooltip"
       data-container="body">
 

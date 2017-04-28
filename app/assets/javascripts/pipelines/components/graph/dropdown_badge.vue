@@ -1,6 +1,7 @@
 <script>
   import jobNameComponent from './job_name.vue';
   import badgeComponent from './badge.vue';
+  import tooltipMixin from '../../../vue_shared/mixins/tooltip';
 
   /**
    * Renders the dropdown for the pipeline graph.
@@ -33,6 +34,10 @@
       },
     },
 
+    mixins: [
+      tooltipMixin,
+    ],
+
     components: {
       badgeComponent,
       jobNameComponent,
@@ -42,14 +47,6 @@
       tooltipText() {
         return `${this.job.name} - ${this.job.status.label}`;
       },
-    },
-
-    mounted() {
-      $(this.$refs.tooltip).tooltip();
-    },
-
-    updated() {
-      $(this.$refs.tooltip).tooltip('fixTitle');
     },
   };
 </script>

@@ -1,5 +1,6 @@
 <script>
   import getActionIcon from '../../../vue_shared/ci_action_icons';
+  import tooltipMixin from '../../../vue_shared/mixins/tooltip';
 
   /**
    * Renders either a cancel, retry or play icon pointing to the given path.
@@ -28,18 +29,14 @@
       },
     },
 
+    mixins: [
+      tooltipMixin,
+    ],
+
     computed: {
       actionIconSvg() {
         return getActionIcon(this.actionIcon);
       },
-    },
-
-    mounted() {
-      $(this.$refs.tooltip).tooltip();
-    },
-
-    updated() {
-      $(this.$refs.tooltip).tooltip('fixTitle');
     },
   };
 </script>
