@@ -1,7 +1,7 @@
 <script>
   import actionComponent from './action_component.vue';
   import dropdownActionComponent from './dropdown_action_component.vue';
-  import jobNameComponent from './job_name.vue';
+  import jobNameComponent from './job_name_component.vue';
   import tooltipMixin from '../../../vue_shared/mixins/tooltip';
 
   /**

@@ -50,6 +50,7 @@
     class="ci-action-icon-wrapper js-ci-status-icon"
     data-toggle="tooltip"
     data-container="body"
-    v-html="actionIconSvg">
+    v-html="actionIconSvg"
+    aria-label="Job's action">
   </a>
 </template>

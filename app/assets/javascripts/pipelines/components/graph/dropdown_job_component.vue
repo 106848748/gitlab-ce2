@@ -1,6 +1,6 @@
 <script>
-  import jobNameComponent from './job_name.vue';
-  import badgeComponent from './badge.vue';
+  import jobNameComponent from './job_name_component.vue';
+  import jobComponent from './job_component.vue';
   import tooltipMixin from '../../../vue_shared/mixins/tooltip';
 
   /**
@@ -39,7 +39,7 @@
     ],
 
     components: {
-      badgeComponent,
+      jobComponent,
       jobNameComponent,
     },
 
@@ -73,7 +73,7 @@
       <div class="arrow"></div>
       <div class="scrollable-menu">
         <li v-for="item in job.list">
-          <badge-component
+          <job-component
             :job="item"
             :is-dropdown="true"
             css-class-job-name="mini-pipeline-graph-dropdown-item"

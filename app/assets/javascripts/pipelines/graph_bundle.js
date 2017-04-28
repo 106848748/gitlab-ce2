@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import pipelineGraph from './components/graph/graph.vue';
+import pipelineGraph from './components/graph/graph_component.vue';
 
 document.addEventListener('DOMContentLoaded', () => new Vue({
   el: '#js-pipeline-graph-vue',
