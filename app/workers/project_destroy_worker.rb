@@ -12,5 +12,7 @@ class ProjectDestroyWorker
     user = User.find(user_id)
 
     ::Projects::DestroyService.new(project, user, params.symbolize_keys).execute
+  rescue StandardError => error
+    project.reload.update!(delete_error: error.message, pending_delete: false)
   end
 end

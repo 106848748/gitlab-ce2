@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170426175636) do
+ActiveRecord::Schema.define(version: 20170428064307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -969,6 +969,7 @@ ActiveRecord::Schema.define(version: 20170426175636) do
     t.boolean "printing_merge_request_link_enabled", default: true, null: false
     t.string "import_jid"
     t.integer "cached_markdown_version"
+    t.text "delete_error"
   end
 
   add_index "projects", ["ci_id"], name: "index_projects_on_ci_id", using: :btree

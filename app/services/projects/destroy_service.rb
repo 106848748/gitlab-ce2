@@ -29,7 +29,6 @@ module Projects
 
       Project.transaction do
         project.team.truncate
-        project.destroy!
 
         unless remove_legacy_registry_tags
           raise_error('Failed to remove some tags in project container registry. Please try again or contact administrator.')
@@ -44,8 +43,10 @@ module Projects
         end
       end
 
-      log_info("Project \"#{project.path_with_namespace}\" was removed")
+      project.destroy!
       system_hook_service.execute_hooks_for(project, :destroy)
+
+      log_info("Project \"#{project.path_with_namespace}\" was removed")
       true
     end
 
