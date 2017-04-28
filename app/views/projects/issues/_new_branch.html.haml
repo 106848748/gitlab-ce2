@@ -11,7 +11,7 @@
       %button.btn.btn-inverted.dropdown-toggle.btn-inverted.btn-success.js-dropdown-toggle{ type: 'button', data: { 'dropdown-trigger' => '#create-merge-request-dropdown' } }
         = icon('caret-down')
       %ul#create-merge-request-dropdown.dropdown-menu.dropdown-menu-align-right{ data: { dropdown: true } }
-        %li.droplab-item-selected{ data: { value: 'create-mr', 'text' => 'Create a merge request' } }
+        %li.droplab-item-selected{ role: 'button', data: { value: 'create-mr', 'text' => 'Create a merge request' } }
           .menu-item
             .icon-container
               = icon('check')
@@ -20,7 +20,7 @@
               %span
                 Creates a branch named after this issue and a merge request. The source branch is 'master' by default.
         %li.divider.droplab-item-ignore
-        %li{ data: {  value: 'create-branch', 'text' => 'Create a branch' } }
+        %li{ role: 'button', data: {  value: 'create-branch', 'text' => 'Create a branch' } }
           .menu-item
             .icon-container
               = icon('check')
