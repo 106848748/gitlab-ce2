@@ -1060,6 +1060,17 @@ require('./task_list');
     };
 
     /**
+     * Perform network request to submit form contents and return jQuery Defferred.
+     */
+    Notes.prototype.submitComment = function(formAction, formData) {
+      return $.ajax({
+        type: 'POST',
+        url: formAction,
+        data: formData,
+      });
+    };
+
+    /**
      * Create placeholder note DOM element populated with comment body
      * that we will show while comment is being posted.
      * Once comment is _actually_ posted on server, we will have final element
@@ -1103,7 +1114,7 @@ require('./task_list');
      * 2) Identify comment type; a) Main thread b) Discussion thread c) Discussion resolve
      * 3) Build temporary placeholder element (using `createPlaceholderNote`)
      * 4) Show placeholder note on UI
-     * 5) Perform network request to submit the note
+     * 5) Perform network request to submit the note using `submitComment`
      *    a) If request is successfully completed
      *        1. Remove placeholder element
      *        2. Show submitted Note element
@@ -1146,12 +1157,10 @@ require('./task_list');
       $notesContainer.append(this.createPlaceholderNote(formContent, uniqueId));
       $form.find('.js-note-text').val('');
 
+      /* eslint-disable promise/catch-or-return */
       // Make request to submit comment on server
-      $.ajax({
-        type: 'POST',
-        url: formAction,
-        data: formData,
-        success: (note) => {
+      this.submitComment(formAction, formData)
+        .then((note) => {
           // Submission successful! remove placeholder
           $notesContainer.find(`#${uniqueId}`).remove();
 
@@ -1177,13 +1186,11 @@ require('./task_list');
             this.reenableTargetFormSubmitButton(e);
             this.resetMainTargetForm(e);
           }
-        },
-        error: () => {
+        }).fail(() => {
           // Submission failed, remove placeholder note and show Flash error message
           $notesContainer.find(`#${uniqueId}`).remove();
           this.addNoteError($form);
-        }
-      });
+        });
 
       return $closeBtn.text($closeBtn.data('original-text'));
     };
@@ -1194,7 +1201,7 @@ require('./task_list');
      *
      * 1) Get Form metadata
      * 2) Update note element with new content
-     * 3) Perform network request to submit the updated note
+     * 3) Perform network request to submit the updated note using `submitComment`
      *    a) If request is successfully completed
      *        1. Show submitted Note element
      *    b) If request failed
@@ -1221,16 +1228,14 @@ require('./task_list');
       $editingNote.removeClass('is-editting').addClass('being-posted fade-in-half');
       $editingNote.find('.note-headline-meta a').html('<i class="fa fa-spinner fa-spin" aria-label="Comment is being updated" aria-hidden="true"></i>');
 
+      /* eslint-disable promise/catch-or-return */
       // Make request to update comment on server
-      $.ajax({
-        type: 'POST',
-        url: formAction,
-        data: formData,
-        success: (note) => {
+      this.submitComment(formAction, formData)
+        .then((note) => {
           // Submission successful! render final note element
           this.updateNote(null, note, null);
-        },
-        error: () => {
+        })
+        .fail(() => {
           // Submission failed, revert back to original note
           $noteBodyText.html(cachedNoteBodyText);
           $editingNote.removeClass('being-posted fade-in');
@@ -1238,8 +1243,7 @@ require('./task_list');
 
           // Show Flash message about failure
           this.updateNoteError();
-        }
-      });
+        });
 
       return $closeBtn.text($closeBtn.data('original-text'));
     };
