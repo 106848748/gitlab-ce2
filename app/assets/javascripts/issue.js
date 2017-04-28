@@ -23,13 +23,13 @@ class Issue {
     }
 
     Issue.$btnNewBranch = $('#new-branch');
+    Issue.createMrDropdownWrap = document.querySelector('.create-mr-dropdown-wrap');
 
     Issue.initMergeRequests();
     Issue.initRelatedBranches();
 
-    const wrapperEl = document.querySelector('.create-mr-dropdown-wrap');
-    if (wrapperEl) {
-      this.createMergeRequestDropdown = new CreateMergeRequestDropdown(wrapperEl);
+    if (Issue.createMrDropdownWrap) {
+      this.createMergeRequestDropdown = new CreateMergeRequestDropdown(Issue.createMrDropdownWrap);
     }
   }
 
