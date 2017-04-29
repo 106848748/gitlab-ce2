@@ -109,7 +109,7 @@ describe('Issue', function() {
           expectNewBranchButtonState(true, false);
           return this.issueStateDeferred;
         } else if (req.url === Issue.createMrDropdownWrap.dataset.canCreatePath) {
-          expect(req.type).toBe('get');
+          expect(req.type).toBe('GET');
           expectNewBranchButtonState(true, false);
           return this.canCreateBranchDeferred;
         }

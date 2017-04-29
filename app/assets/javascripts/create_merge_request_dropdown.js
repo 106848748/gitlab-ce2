@@ -76,7 +76,7 @@ export default class CreateMergeRequestDropdown {
 
   checkAbilityToCreateBranch() {
     return $.ajax({
-      method: 'GET',
+      type: 'GET',
       dataType: 'json',
       url: this.canCreatePath,
       beforeSend: () => this.setUnavailableButtonState(),
