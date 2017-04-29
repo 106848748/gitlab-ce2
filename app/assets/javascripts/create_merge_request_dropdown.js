@@ -66,12 +66,12 @@ export default class CreateMergeRequestDropdown {
     if (isLoading) {
       this.unavailableButtonArrow.classList.add('fa-spinner', 'fa-spin');
       this.unavailableButtonArrow.classList.remove('fa-exclamation-triangle');
+      this.unavailableButtonText.textContent = 'Checking branch availability…';
     } else {
       this.unavailableButtonArrow.classList.remove('fa-spinner', 'fa-spin');
       this.unavailableButtonArrow.classList.add('fa-exclamation-triangle');
+      this.unavailableButtonText.textContent = 'New branch unavailable';
     }
-
-    this.unavailableButtonText.textContent = `New branch unavailable${isLoading ? '...' : ''}`;
   }
 
   checkAbilityToCreateBranch() {
