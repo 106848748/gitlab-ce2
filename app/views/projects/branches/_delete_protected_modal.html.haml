@@ -1,0 +1,37 @@
+#modal-delete-branch.modal{ tabindex: -1 }
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %a.close{ href: "#", data: { dismiss: 'modal' }} ×
+        %h3.page-title
+          Delete protected branch
+          = surround "'", "'?" do
+            %span.js-branch-name>[branch name]
+
+      .modal-body
+        %p
+          You’re about to permanently delete the protected branch
+          = succeed '.' do
+            %strong.js-branch-name [branch name]
+        %p
+          This branch hasn’t been merged yet. To avoid data loss, consider merging this branch into another before deleting it.
+        %p
+          Once you confirm and press
+          %strong Delete protected branch
+          , it cannot be undone or recovered.
+        %p
+          %strong To confirm, type
+          %kbd.js-branch-name [branch name]
+
+        .form-group
+        = text_field_tag 'delete_branch_input', '', class: 'form-control js-delete-branch-input'
+
+      .modal-footer
+        %a.btn{ href: "#", data: { dismiss: 'modal' }} Cancel
+        = link_to '',
+          class: "btn btn-danger js-delete-branch",
+          title: 'Delete branch',
+          method: :delete,
+          remote: true,
+          "aria-label" => "Delete" do
+          Delete protected branch
