@@ -155,6 +155,7 @@ const ShortcutsBlob = require('./shortcuts_blob');
           new GroupsList();
 
           const landingElement = document.querySelector('.js-explore-groups-landing');
+          if (!landingElement) break;
           const exploreGroupsLanding = new Landing(
             landingElement,
             landingElement.querySelector('.dismiss-button'),
