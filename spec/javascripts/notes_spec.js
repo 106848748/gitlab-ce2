@@ -24,7 +24,7 @@ require('~/lib/utils/text_utility');
 
     describe('task lists', function() {
       beforeEach(function() {
-        $('form').on('submit', function(e) {
+        $('.js-comment-button').on('click', function(e) {
           e.preventDefault();
         });
         this.notes = new Notes();
@@ -58,9 +58,12 @@ require('~/lib/utils/text_utility');
           reset: function() {}
         });
 
-        $('form').on('submit', function(e) {
+        $('.js-comment-button').on('click', (e) => {
+          const $form = $(this);
           e.preventDefault();
-          $('.js-main-target-form').trigger('ajax:success');
+          this.notes.addNote($form);
+          this.notes.reenableTargetFormSubmitButton(e);
+          this.notes.resetMainTargetForm(e);
         });
       });
 
