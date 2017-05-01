@@ -170,6 +170,11 @@ setup-test-env:
   <<: *dedicated-runner
   <<: *except-docs
   stage: prepare
+  variables:
+    SETUP_DB: "false"
+    USE_BUNDLE_INSTALL: "false"
+  cache:
+    key: "empty"
   script:
     - node --version
     - yarn install --pure-lockfile
