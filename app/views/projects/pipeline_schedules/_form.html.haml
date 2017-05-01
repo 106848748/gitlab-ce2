@@ -1,4 +1,6 @@
-= form_for [@project.namespace.becomes(Namespace), @project, @pipeline_schedule], as: :pipeline_schedule, html: { id: "new-pipeline-schedule-form", class: "form-horizontal js-pipeline-schedule-form js-requires-input" } do |f|
+- timezones = ActiveSupport::TimeZone.all.to_json
+
+= form_for [@project.namespace.becomes(Namespace), @project, @pipeline_schedule], as: :pipeline_schedule, html: { id: "new-pipeline-schedule-form", class: "form-horizontal js-pipeline-schedule-form js-requires-input gl-show-field-errors" } do |f|
   = form_errors(@pipeline_schedule)
   .form-group
     = f.label :description, 'Description', class: 'control-label'
@@ -23,3 +25,5 @@
   .form-actions
     = f.submit 'Save pipeline schedule', class: 'btn btn-create', tabindex: 3
     = link_to 'Cancel', pipeline_schedules_path(@project), class: 'btn btn-cancel'
+  %span= timezones
+  #mutable-input-list
