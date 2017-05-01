@@ -9,7 +9,7 @@ feature 'Issue notes polling', :feature, :js do
       visit namespace_project_issue_path(project.namespace, project, issue)
     end
 
-    it 'should display the new comment' do
+    it 'displays the new comment' do
       note = create(:note, noteable: issue, project: project, note: 'Looks good!')
       page.execute_script('notes.refresh();')
 
@@ -28,7 +28,7 @@ feature 'Issue notes polling', :feature, :js do
       visit namespace_project_issue_path(project.namespace, project, issue)
     end
 
-    it 'should display the updated content' do
+    it 'displays the updated content' do
       expect(page).to have_selector("#note_#{existing_note.id}", text: note_text)
 
       update_note(existing_note, updated_text)
