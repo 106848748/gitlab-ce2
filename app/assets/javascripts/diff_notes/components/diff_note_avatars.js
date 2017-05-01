@@ -27,8 +27,8 @@ const DiffNoteAvatars = Vue.extend({
         <user-avatar-image
           class="diff-comment-avatar js-diff-comment-avatar"
           @click="clickedAvatar($event)"
-          :img-src="note.authorAvatar"
-          :img-size="19"
+          :src="note.authorAvatar"
+          :size="19"
           :tooltip-text="getTooltipText(note)"
           :data-line-type="lineType"
           data-html="true"
