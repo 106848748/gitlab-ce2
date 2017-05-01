@@ -94,7 +94,7 @@ describe Blob do
   describe '#simple_viewer' do
     context 'when the blob is empty' do
       it 'returns an empty viewer' do
-        blob = fake_blob(data: '')
+        blob = fake_blob(data: '', size: 0)
 
         expect(blob.simple_viewer).to be_a(BlobViewer::Empty)
       end

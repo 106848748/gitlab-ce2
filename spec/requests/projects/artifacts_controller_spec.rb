@@ -14,7 +14,29 @@ describe Projects::ArtifactsController do
 
   let(:build) { create(:ci_build, :success, :artifacts, pipeline: pipeline) }
 
-  describe 'GET /:project/builds/artifacts/:ref_name/browse?job=name' do
+  describe 'GET browse' do
+
+  end
+
+  describe 'GET file' do
+
+  end
+
+  describe 'GET raw' do
+    # send_data = response_headers[Gitlab::Workhorse::SEND_DATA_HEADER]
+    #
+    # expect(send_data).to start_with('artifacts-entry:')
+    #
+    # base64_params = send_data.sub(/\Aartifacts\-entry:/, '')
+    # params = JSON.parse(Base64.urlsafe_decode64(base64_params))
+    #
+    # expect(params.keys).to eq(%w(Archive Entry))
+    # expect(params['Archive']).to end_with('build_artifacts.zip')
+    # expect(params['Entry']).to eq(Base64.encode64('ci_artifacts.txt'))
+  end
+
+  # GET /:project/builds/artifacts/:ref_name/browse?job=name
+  describe 'GET latest_succeeded' do
     before do
       project.team << [user, :developer]
 

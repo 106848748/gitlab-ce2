@@ -159,7 +159,7 @@ feature 'File blob', :js, feature: true do
           expect(page).to have_selector('.blob-viewer[data-type="rich"]')
 
           # shows an error message
-          expect(page).to have_content('The rendered file could not be displayed because it is stored in LFS. You can view the source or download it instead.')
+          expect(page).to have_content('The rendered file could not be displayed because it is stored in LFS. You can download it instead.')
 
           # shows a viewer switcher
           expect(page).to have_selector('.js-blob-viewer-switcher')
@@ -167,8 +167,8 @@ feature 'File blob', :js, feature: true do
           # does not show a copy button
           expect(page).not_to have_selector('.js-copy-blob-source-btn')
 
-          # shows a raw button
-          expect(page).to have_link('Open raw')
+          # shows a download button
+          expect(page).to have_link('Download')
         end
       end
 
