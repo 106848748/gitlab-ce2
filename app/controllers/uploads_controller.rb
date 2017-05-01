@@ -1,43 +1,28 @@
 class UploadsController < ApplicationController
+  include UploadsActions
+
   skip_before_action :authenticate_user!
   before_action :find_model, :authorize_access!
-
-  def show
-    uploader = @model.send(upload_mount)
-
-    unless uploader.file_storage?
-      return redirect_to uploader.url
-    end
-
-    unless uploader.file && uploader.file.exists?
-      return render_404
-    end
-
-    disposition = uploader.image? ? 'inline' : 'attachment'
-
-    expires_in 0.seconds, must_revalidate: true, private: true
-    send_file uploader.file.path, disposition: disposition
-  end
 
   private
 
   def find_model
-    unless upload_model && upload_mount
-      return render_404
-    end
+    return render_404 unless upload_model
 
     @model = upload_model.find(params[:id])
   end
 
   def authorize_access!
     authorized =
-      case @model
+      case model
       when Project
-        can?(current_user, :read_project, @model)
+        can?(current_user, :read_project, model)
       when Group
-        can?(current_user, :read_group, @model)
+        can?(current_user, :read_group, model)
       when Note
-        can?(current_user, :read_project, @model.project)
+        can?(current_user, :read_project, model.project)
+      when PersonalSnippet
+        can?(current_user, :read_personal_snippet, model)
       else
         # No authentication required for user avatars.
         true
@@ -58,7 +43,8 @@ class UploadsController < ApplicationController
       "project" => Project,
       "note"    => Note,
       "group"   => Group,
-      "appearance" => Appearance
+      "appearance" => Appearance,
+      "personal_snippet" => PersonalSnippet
     }
 
     upload_models[params[:model]]
@@ -70,5 +56,29 @@ class UploadsController < ApplicationController
     if upload_mounts.include?(params[:mounted_as])
       params[:mounted_as]
     end
+  end
+
+  def uploader
+    return @uploader if defined?(@uploader)
+
+    if model.is_a?(PersonalSnippet)
+      @uploader = PersonalFileUploader.new(model, params[:secret])
+
+      @uploader.retrieve_from_store!(params[:filename])
+    else
+      @uploader = @model.send(upload_mount)
+
+      redirect_to @uploader.url unless @uploader.file_storage?
+    end
+
+    @uploader
+  end
+
+  def uploader_class
+    PersonalFileUploader
+  end
+
+  def model
+    @model
   end
 end

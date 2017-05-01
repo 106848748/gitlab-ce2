@@ -8,6 +8,35 @@ end
 describe UploadsController do
   let!(:user) { create(:user, avatar: fixture_file_upload(Rails.root + "spec/fixtures/dk.png", "image/png")) }
 
+  describe 'POST create' do
+    let(:snippet) { create(:personal_snippet, :public) }
+    let(:jpg)     { fixture_file_upload(Rails.root + 'spec/fixtures/rails_sample.jpg', 'image/jpg') }
+
+    before do
+      sign_in(user)
+    end
+
+    context 'with valid image' do
+      before do
+        post :create, model: 'personal_snippet', id: snippet.id, file: jpg, format: :json
+      end
+
+      it 'returns a content with original filename, new link, and correct type.' do
+        expect(response.body).to match '\"alt\":\"rails_sample\"'
+        expect(response.body).to match "\"url\":\"/uploads"
+      end
+
+      it 'creates a corresponding Upload record' do
+        upload = Upload.last
+
+        aggregate_failures do
+          expect(upload).to exist
+          expect(upload.model).to eq snippet
+        end
+      end
+    end
+  end
+
   describe "GET show" do
     context 'Content-Disposition security measures' do
       let(:project) { create(:empty_project, :public) }
