@@ -226,6 +226,7 @@ GitLabDropdown = (function() {
     this.filterInputBlur = this.options.filterInputBlur != null
       ? this.options.filterInputBlur
       : true;
+
     // If no input is passed create a default one
     self = this;
     // If selector was passed

@@ -10,14 +10,15 @@
     = f.label :cron, 'Cron Pattern', class: 'control-label'
     .col-sm-10
       = f.text_field :cron, class: 'form-control', required: false, autofocus: true, value: "0 0 * * *"
+      %a{ href: 'https://en.wikipedia.org/wiki/Cron', _blank: 'true' } Cron syntax
   .form-group
     = f.label :cron_timezone, 'Cron Timezone', class: 'control-label'
     .col-sm-10
-      = f.text_field :cron_timezone, class: 'form-control', required: false, autofocus: true, value: 'UTC'
+      = dropdown_tag("Select a timezone", options: { toggle_class: 'btn js-timezone-dropdown', title: "Select a timezone", filter: true, placeholder: "Filter", data: { data: timezones } } )
   .form-group
     = f.label :ref, 'Branch', class: 'control-label'
     .col-sm-10
-      = f.text_field :ref, class: 'form-control', required: true, autofocus: true, value: @project.default_branch
+      = f.select(:ref, @project.repository.branch_names, {}, {class: 'select2 select-wide'})
   .form-group
     = f.label :active, 'Active', class: 'control-label'
     .col-sm-10
@@ -25,5 +26,4 @@
   .form-actions
     = f.submit 'Save pipeline schedule', class: 'btn btn-create', tabindex: 3
     = link_to 'Cancel', pipeline_schedules_path(@project), class: 'btn btn-cancel'
-  %span= timezones
   #mutable-input-list
